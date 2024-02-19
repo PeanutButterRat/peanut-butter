@@ -1,4 +1,4 @@
-#include "scanner.h"
+#include "../include/scanner.h"
 
 #include <bits/stdc++.h>
 

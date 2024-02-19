@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "scanner.h"
+#include "../include/scanner.h"
 
 int main() {
     std::string text = "THIS IS A TEST STRING define as plus over \" string \" (comment) times";
