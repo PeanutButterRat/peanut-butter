@@ -2,7 +2,6 @@
 
 #include <bits/stdc++.h>
 
-
 const std::map<std::string, TokenType> keywords {
         { std::string("class"), TokenType::CLASS },
         { std::string("define"), TokenType::DEFINE },
@@ -22,6 +21,8 @@ const std::map<std::string, TokenType> keywords {
         { std::string("minus"), TokenType::SUBTRACTION },
         { std::string("plus"), TokenType::ADDITION },
         { std::string("over"), TokenType::DIVISION },
+        { std::string("with"), TokenType::WITH },
+        { std::string("return"), TokenType::RETURN },
 };
 
 std::vector<Token> Scanner::tokenize() {
@@ -36,17 +37,19 @@ std::vector<Token> Scanner::tokenize() {
             next();
         }
 
-        if (!stack.empty() && tabs > stack.top()) {
+        if (!stack.empty() && tabs > stack.top() || stack.empty() && tabs > 0) {
             stack.push(tabs);
             tokens.emplace_back(BLOCK_START, "", line);
+        }
+        while (!stack.empty() && tabs < stack.top()) {
+            stack.pop();
+            tokens.emplace_back(BLOCK_END, "", line);
         }
 
         auto current = peek();
 
         while (!is_line_terminator(current)) {
-            if (current == '\n') {
-                newline();
-            } else if (isspace(current)) {
+            if (isspace(current)) {
                 whitespace();
             } else if (current == '(') {
                 comment();
@@ -54,9 +57,11 @@ std::vector<Token> Scanner::tokenize() {
                 colon();
             } else if (current == '.') {
                 period();
+            } else if (current == ',') {
+                comma();
             } else if (current == '"' || current == '\'') {
                 string(current);
-            } else if (is_number_start_char(current)) {
+            } else if (isdigit(current)) {
                 number();
             } else if (is_identifier_char(current)) {  // Identifier or keyword.
                 word();
@@ -67,12 +72,12 @@ std::vector<Token> Scanner::tokenize() {
             current = peek();
         }
 
-        next();  // Discard the newline.
+        newline();  // Discard the newline character.
+    }
 
-        while (!stack.empty() && tabs > stack.top()) {
-            stack.pop();
-            tokens.emplace_back(BLOCK_END, "", line);
-        }
+    while (!stack.empty()) {
+        stack.pop();
+        tokens.emplace_back(BLOCK_END, "", line);
     }
 
     return tokens;
@@ -150,16 +155,23 @@ Scanner::Scanner(std::string source) {
 
 void Scanner::number() {
     auto start = index;
-    next();  // Move past the opening quotation.
 
-    while (isdigit(peek()) && peek() != '"') { next(); }
-    auto number = source.substr(start + 1, index - start - 2);  // Don't include the quotes.
+    if (peek() == '0') {  // Numbers that start with '0' are treated as 0 (no leading 0's allowed).
+        tokens.emplace_back(NUMBER, "0", line);
+        next();
+    } else {
+        next();
 
-    tokens.emplace_back(NUMBER, number, line);
+        while (isdigit(peek())) { next(); }
+        auto number = source.substr(start, index - start);
+
+        tokens.emplace_back(NUMBER, number, line);
+    }
 }
 
-bool Scanner::is_number_start_char(char c) {
-    return isdigit(c) && c != '0';
+void Scanner::comma() {
+    tokens.emplace_back(COMMA, ",", line);
+    next();
 }
 
 std::ostream &operator<<(std::ostream &os, const Token &token) {
@@ -184,6 +196,12 @@ std::ostream &operator<<(std::ostream &os, const Token &token) {
         case IDENTIFIER:
             type = "IDENTIFIER";
             break;
+        case COMMA:
+            type = "COMMA";
+            break;
+        case NUMBER:
+            type = "NUMBER";
+            break;
         default:  // Search for the keyword literal in the map.
             for (auto [keyword, value] : keywords) {
                 if (value == token.type) {
@@ -195,7 +213,7 @@ std::ostream &operator<<(std::ostream &os, const Token &token) {
             break;
     }
 
-    os << "Token: { Type: " << type << ", Lexeme: " << token.lexeme << ", Line: " << token.line << " }";
+    os << "Token: { Type: " << type << ", Lexeme: '" << token.lexeme << "', Line: " << token.line << " }";
     return os;
 }
 
@@ -203,4 +221,12 @@ Token::Token(TokenType type, std::string lexeme, size_t line) {
     this->type = type;
     this->lexeme = std::move(lexeme);
     this->line = line;
+}
+
+bool operator==(const Token& a, const Token& b) {
+    return a.type == b.type && a.lexeme == b.lexeme && a.line == b.line;
+}
+
+bool operator!=(const Token& a, const Token& b) {
+    return !(a == b);
 }

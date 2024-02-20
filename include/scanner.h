@@ -32,6 +32,9 @@ enum TokenType {
     BLOCK_END,
     STRING,
     PERIOD,
+    WITH,
+    COMMA,
+    RETURN
 };
 
 class Token {
@@ -42,6 +45,8 @@ class Token {
 public:
     Token(TokenType type, std::string lexeme, size_t line);
     friend std::ostream& operator<<(std::ostream& os, const Token& token);
+    friend bool operator== (const Token& a, const Token& b);
+    friend bool operator!= (const Token& a, const Token& b);
 };
 
 
@@ -58,6 +63,7 @@ class Scanner {
     void word();
     void whitespace();
     void period();
+    void comma();
     void newline();
     void colon();
     void comment();
@@ -66,7 +72,6 @@ class Scanner {
 
     static bool is_identifier_char(char c);
     static bool is_line_terminator(char c);
-    static bool is_number_start_char(char c);
 
 public:
     explicit Scanner(std::string source);

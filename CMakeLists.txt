@@ -15,7 +15,10 @@ add_executable(
         src/main.cpp
 )
 
-target_link_libraries(cpbpl PRIVATE scanner)
+target_link_libraries(
+        cpbpl
+        scanner
+)
 
 
 # Google Test.
@@ -36,6 +39,7 @@ add_executable(
 )
 target_link_libraries(
         scanner_test
+        scanner
         GTest::gtest_main
 )
 
