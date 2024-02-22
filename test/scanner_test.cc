@@ -4,7 +4,7 @@
 
 
 TEST(ScannerTests, AdditionFunction) {
-    std::string source = "define foo with parameters a, b, c as:\n"
+    std::string source = "define foo with a, b, c as:\n"
                          "\tlet x be 5.\n"
                          "\tlet y be 10.\n"
                          "\treturn x plus y.";
@@ -13,7 +13,6 @@ TEST(ScannerTests, AdditionFunction) {
             {DEFINE, "define", 1},
             {IDENTIFIER, "foo", 1},
             {WITH, "with", 1},
-            {PARAMETERS, "parameters", 1},
             {IDENTIFIER, "a", 1},
             {COMMA, ",", 1},
             {IDENTIFIER, "b", 1},
