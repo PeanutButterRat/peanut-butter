@@ -32,7 +32,8 @@ enum TokenType {
     PERIOD,
     WITH,
     COMMA,
-    RETURN
+    RETURN,
+    END_OF_STREAM
 };
 
 struct Token {
@@ -40,7 +41,8 @@ struct Token {
     std::string lexeme;
     size_t line;
 
-public:
+    std::string get_type_string() const;
+
     Token(TokenType type, std::string lexeme, size_t line);
     friend std::ostream& operator<<(std::ostream& os, const Token& token);
     friend bool operator== (const Token& a, const Token& b);

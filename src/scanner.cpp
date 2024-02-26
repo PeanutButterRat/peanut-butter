@@ -173,46 +173,7 @@ void Scanner::comma() {
 }
 
 std::ostream &operator<<(std::ostream &os, const Token &token) {
-    std::string type = "UNKNOWN";
-
-    switch (token.type) {
-        case COLON:
-            type = "COLON";
-            break;
-        case PERIOD:
-            type = "PERIOD";
-            break;
-        case STRING:
-            type = "STRING";
-            break;
-        case BLOCK_START:
-            type = "BLOCK_START";
-            break;
-        case BLOCK_END:
-            type = "BLOCK_END";
-            break;
-        case IDENTIFIER:
-            type = "IDENTIFIER";
-            break;
-        case COMMA:
-            type = "COMMA";
-            break;
-        case NUMBER:
-            type = "NUMBER";
-            break;
-        default:  // Search for the keyword literal in the map.
-            for (auto [keyword, value] : keywords) {
-                if (value == token.type) {
-                    type = keyword;
-                    std::transform(type.begin(), type.end(), type.begin(), toupper);
-                    break;
-                }
-            }
-            break;
-    }
-
-    os << "Token: { Type: " << type << ", Lexeme: '" << token.lexeme << "', Line: " << token.line << " }";
-    return os;
+    return os << "Token: { Type: " << token.get_type_string() << ", Lexeme: '" << token.lexeme << "', Line: " << token.line << " }";
 }
 
 Token::Token(TokenType type, std::string lexeme, size_t line) {
@@ -227,4 +188,44 @@ bool operator==(const Token& a, const Token& b) {
 
 bool operator!=(const Token& a, const Token& b) {
     return !(a == b);
+}
+
+std::string Token::get_type_string() const {
+    std::string type_string = "UNKNOWN";
+    switch (type) {
+        case COLON:
+            type_string = "COLON";
+            break;
+        case PERIOD:
+            type_string = "PERIOD";
+            break;
+        case STRING:
+            type_string = "STRING";
+            break;
+        case BLOCK_START:
+            type_string = "BLOCK_START";
+            break;
+        case BLOCK_END:
+            type_string = "BLOCK_END";
+            break;
+        case IDENTIFIER:
+            type_string = "IDENTIFIER";
+            break;
+        case COMMA:
+            type_string = "COMMA";
+            break;
+        case NUMBER:
+            type_string = "NUMBER";
+            break;
+        default:  // Search for the keyword literal in the map.
+            for (auto [keyword, value] : keywords) {
+                if (value == type) {
+                    type_string = keyword;
+                    std::transform(type_string.begin(), type_string.end(), type_string.begin(), toupper);
+                    break;
+                }
+            }
+            break;
+    }
+    return type_string;
 }
