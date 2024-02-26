@@ -4,22 +4,28 @@ project(cpbpl)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+add_executable(
+        cpbpl
+        src/main.cpp
+)
+
+add_library(
+        compiler
+        src/compiler.cpp
+        include/compiler.h
+)
+
 add_library(
         scanner
         src/scanner.cpp
         include/scanner.h
 )
 
-add_executable(
-        cpbpl
-        src/main.cpp
-)
-
 target_link_libraries(
         cpbpl
         scanner
+        compiler
 )
-
 
 # Google Test.
 include(FetchContent)
@@ -37,6 +43,7 @@ add_executable(
         scanner_test
         test/scanner_test.cc
 )
+
 target_link_libraries(
         scanner_test
         scanner

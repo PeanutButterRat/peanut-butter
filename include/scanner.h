@@ -35,7 +35,7 @@ enum TokenType {
     RETURN
 };
 
-class Token {
+struct Token {
     TokenType type;
     std::string lexeme;
     size_t line;
@@ -46,8 +46,6 @@ public:
     friend bool operator== (const Token& a, const Token& b);
     friend bool operator!= (const Token& a, const Token& b);
 };
-
-
 
 class Scanner {
     std::string source;
