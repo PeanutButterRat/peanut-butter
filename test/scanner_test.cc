@@ -40,7 +40,8 @@ TEST(ScannerTests, AdditionFunction) {
             {IDENTIFIER, "y", 4},
             {PERIOD, ".", 4},
 
-            {BLOCK_END, "", 5}
+            {BLOCK_END, "", 5},
+            {END_OF_STREAM, "", 5}
     };
 
     std::vector<Token> actual = Scanner{source}.tokenize();
@@ -75,6 +76,7 @@ TEST(ScannerTests, Blocks) {
             {PERIOD, ".", 4},
 
             {BLOCK_END, "", 5},
+            {END_OF_STREAM, "", 5}
     };
 
     std::vector<Token> actual = Scanner{source}.tokenize();
@@ -105,6 +107,7 @@ TEST(ScannerTests, NoParametersFunction) {
             {PERIOD, ".", 3},
 
             {BLOCK_END, "", 4},
+            {END_OF_STREAM, "", 4}
     };
 
     std::vector<Token> actual = Scanner{source}.tokenize();

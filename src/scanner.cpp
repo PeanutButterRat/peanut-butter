@@ -78,6 +78,8 @@ std::vector<Token> Scanner::tokenize() {
         tokens.emplace_back(BLOCK_END, "", line);
     }
 
+    tokens.emplace_back(END_OF_STREAM, "", line);
+
     return tokens;
 }
 
