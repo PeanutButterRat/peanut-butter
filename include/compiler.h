@@ -1,6 +1,7 @@
 #ifndef CPBPL_COMPILER_H
 #define CPBPL_COMPILER_H
 
+#include <utility>
 #include <vector>
 #include <cstdint>
 #include "scanner.h"
@@ -9,11 +10,11 @@ typedef uint8_t byte;
 typedef uint32_t number;
 
 enum Opcode {
-    ADD,
-    SUBTRACT,
-    MULTIPLY,
-    DIVIDE,
-    CONSTANT
+    OP_ADD,
+    OP_SUBTRACT,
+    OP_MULTIPLY,
+    OP_DIVIDE,
+    OP_CONSTANT
 };
 
 class Bytecode {
@@ -23,6 +24,7 @@ class Bytecode {
 public:
     size_t add_constant(number constant);
     void add(byte byte);
+    void disassemble() const;
 };
 
 class Compiler {
@@ -35,13 +37,12 @@ class Compiler {
     Token peek();
     void expression();
     void constant();
-    void addition();
-    void subtraction();
-    void multiplication();
-    void division();
+
+    static bool is_binary_operator(const Token& token);
 
 public:
     Bytecode parse();
+    explicit Compiler(std::vector<Token> tokens) { this->tokens = std::move(tokens); }
 };
 
 class UnexpectedTokenException : public std::exception {

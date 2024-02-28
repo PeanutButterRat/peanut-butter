@@ -1,5 +1,12 @@
 #include "../include/compiler.h"
 
+std::map<TokenType, Opcode> binary_operations {
+        { ADDITION, OP_ADD },
+        { SUBTRACTION, OP_SUBTRACT},
+        { MULTIPLICATION, OP_MULTIPLY},
+        { DIVISION, OP_DIVIDE},
+};
+
 void Compiler::emit(uint8_t byte) {
     code.add(byte);
 }
@@ -15,19 +22,11 @@ Bytecode Compiler::parse() {
 
 void Compiler::expression() {
     constant();
-    switch (peek().type) {
-        case ADDITION:
-            addition();
-            break;
-        case SUBTRACTION:
-            subtraction();
-            break;
-        case MULTIPLICATION:
-            multiplication();
-            break;
-        case DIVISION:
-            division();
-            break;
+
+    while (is_binary_operator(peek())) {
+        Opcode operation = binary_operations[next().type];
+        constant();
+        emit(operation);
     }
 }
 
@@ -37,32 +36,12 @@ Token Compiler::peek() {
 
 void Compiler::constant() {
     number number = stoi(next().lexeme);
-    emit(CONSTANT);
+    emit(OP_CONSTANT);
     emit(code.add_constant(number));
 }
 
-void Compiler::subtraction() {
-    next();  // Consume the '-'.
-    expression();
-    emit(SUBTRACT);
-}
-
-void Compiler::addition() {
-    next();  // Consume the '+'.
-    expression();
-    emit(ADDITION);
-}
-
-void Compiler::multiplication() {
-    next();  // Consume the '*'.
-    expression();
-    emit(MULTIPLY);
-}
-
-void Compiler::division() {
-    next();  // Consume the '/'.
-    expression();
-    emit(DIVIDE);
+bool Compiler::is_binary_operator(const Token &token) {
+    return binary_operations.find(token.type) != binary_operations.end();
 }
 
 size_t Bytecode::add_constant(number constant) {
@@ -72,4 +51,35 @@ size_t Bytecode::add_constant(number constant) {
 
 void Bytecode::add(byte byte) {
     bytes.emplace_back(byte);
+}
+
+void Bytecode::disassemble() const {
+    using std::cout, std::endl;
+
+    for (auto it = bytes.begin(); it != bytes.end(); it++) {
+        auto opcode = *it;
+
+        switch (opcode) {
+            case OP_ADD:
+                cout << "ADD" << endl;
+                break;
+            case OP_SUBTRACT:
+                cout << "SUBTRACT"  << endl;
+                break;
+            case OP_MULTIPLY:
+                cout << "MULTIPLY"  << endl;
+                break;
+            case OP_DIVIDE:
+                cout << "DIVIDE"  << endl;
+                break;
+            case OP_CONSTANT: {
+                size_t index = *(++it);
+                cout << "CONSTANT [index: " << index << ", value: " << constants[index] << "]" << endl;
+                break;
+            }
+            default:
+                cout << "[UNKNOWN OPCODE]" << endl;
+                break;
+        }
+    }
 }
