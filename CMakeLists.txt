@@ -9,6 +9,17 @@ add_executable(
         compiler/src/main.cpp
 )
 
+add_executable(
+        pbpl
+        vm/src/main.cpp
+)
+
+add_library(
+        vm
+        vm/src/vm.cpp
+        vm/include/vm.h
+)
+
 add_library(
         compiler
         compiler/src/compiler.cpp
