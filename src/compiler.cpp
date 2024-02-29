@@ -4,9 +4,10 @@
 
 std::map<TokenType, Opcode> binary_operations {
         { ADDITION, OP_ADD },
-        { SUBTRACTION, OP_SUBTRACT},
-        { MULTIPLICATION, OP_MULTIPLY},
-        { DIVISION, OP_DIVIDE},
+        { SUBTRACTION, OP_SUBTRACT },
+        { MULTIPLICATION, OP_MULTIPLY },
+        { DIVISION, OP_DIVIDE },
+        { MODULO, OP_MODULO }
 };
 
 void Compiler::emit(uint8_t byte) {

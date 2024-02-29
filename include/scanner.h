@@ -33,6 +33,7 @@ enum TokenType {
     WITH,
     COMMA,
     RETURN,
+    MODULO,
     END_OF_STREAM
 };
 

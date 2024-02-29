@@ -21,6 +21,7 @@ const std::map<std::string, TokenType> keywords {
         { "over", DIVISION },
         { "with", WITH },
         { "return", RETURN },
+        { "mod", MODULO },
 };
 
 std::vector<Token> Scanner::tokenize() {

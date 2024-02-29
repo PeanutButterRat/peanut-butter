@@ -14,7 +14,8 @@ enum Opcode {
     OP_SUBTRACT,
     OP_MULTIPLY,
     OP_DIVIDE,
-    OP_CONSTANT
+    OP_CONSTANT,
+    OP_MODULO,
 };
 
 class Bytecode {
