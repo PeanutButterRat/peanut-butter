@@ -6,25 +6,25 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 add_executable(
         cpbpl
-        src/main.cpp
+        compiler/src/main.cpp
 )
 
 add_library(
         compiler
-        src/compiler.cpp
-        include/compiler.h
+        compiler/src/compiler.cpp
+        compiler/include/compiler.h
 )
 
 add_library(
         scanner
-        src/scanner.cpp
-        include/scanner.h
+        compiler/src/scanner.cpp
+        compiler/include/scanner.h
 )
 
 add_library(
         token
-        src/token.cpp
-        include/token.h
+        compiler/src/token.cpp
+        compiler/include/token.h
 )
 
 target_link_libraries(
@@ -48,7 +48,7 @@ enable_testing()
 
 add_executable(
         scanner_test
-        test/scanner_test.cc
+        compiler/test/scanner_test.cc
 )
 
 target_link_libraries(
@@ -60,7 +60,7 @@ target_link_libraries(
 
 add_executable(
         compiler_test
-        test/compiler_test.cc
+        compiler/test/compiler_test.cc
 )
 
 target_link_libraries(
