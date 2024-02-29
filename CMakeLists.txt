@@ -27,6 +27,12 @@ add_library(
 )
 
 add_library(
+        bytecode
+        compiler/src/bytecode.cpp
+        compiler/include/bytecode.h
+)
+
+add_library(
         scanner
         compiler/src/scanner.cpp
         compiler/include/scanner.h
@@ -41,6 +47,7 @@ add_library(
 target_link_libraries(
         cpbpl
         scanner
+        bytecode
         compiler
         token
 )
@@ -79,6 +86,7 @@ target_link_libraries(
         compiler
         scanner
         token
+        bytecode
         GTest::gtest_main
 )
 
