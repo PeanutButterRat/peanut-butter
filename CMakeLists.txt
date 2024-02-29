@@ -50,5 +50,18 @@ target_link_libraries(
         GTest::gtest_main
 )
 
+add_executable(
+        compiler_test
+        test/compiler_test.cc
+)
+
+target_link_libraries(
+        compiler_test
+        compiler
+        scanner
+        GTest::gtest_main
+)
+
 include(GoogleTest)
 gtest_discover_tests(scanner_test)
+gtest_discover_tests(compiler_test)

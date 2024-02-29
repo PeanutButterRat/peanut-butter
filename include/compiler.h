@@ -18,13 +18,19 @@ enum Opcode {
 };
 
 class Bytecode {
-    std::vector<byte> bytes;
     std::vector<number> constants;
 
 public:
+    std::vector<byte> bytes;
+
     size_t add_constant(number constant);
     void add(byte byte);
     void disassemble() const;
+
+    Bytecode() = default;
+    Bytecode(std::vector<byte> bytes, std::vector<number> constants);
+    friend bool operator== (const Bytecode& a, const Bytecode& b);
+    friend bool operator!= (const Bytecode& a, const Bytecode& b);
 };
 
 class Compiler {

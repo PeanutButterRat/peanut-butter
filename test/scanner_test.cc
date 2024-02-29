@@ -2,7 +2,6 @@
 
 #include "../include/scanner.h"
 
-
 TEST(ScannerTests, AdditionFunction) {
     std::string source = "define foo with a, b, c as:\n"
                          "\tlet x be 5.\n"
