@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 
+#include "../include/scanner.h"
 #include "../include/compiler.h"
 
 Bytecode compile(std::string& source) {

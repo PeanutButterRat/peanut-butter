@@ -21,10 +21,17 @@ add_library(
         include/scanner.h
 )
 
+add_library(
+        token
+        src/token.cpp
+        include/token.h
+)
+
 target_link_libraries(
         cpbpl
         scanner
         compiler
+        token
 )
 
 # Google Test.
@@ -47,6 +54,7 @@ add_executable(
 target_link_libraries(
         scanner_test
         scanner
+        token
         GTest::gtest_main
 )
 
@@ -59,6 +67,7 @@ target_link_libraries(
         compiler_test
         compiler
         scanner
+        token
         GTest::gtest_main
 )
 

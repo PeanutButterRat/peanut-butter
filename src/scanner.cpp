@@ -1,6 +1,6 @@
-#include "../include/scanner.h"
-
 #include <bits/stdc++.h>
+
+#include "../include/scanner.h"
 
 const std::map<std::string, TokenType> keywords {
         { "define", DEFINE },
@@ -177,58 +177,4 @@ void Scanner::comma() {
 
 std::ostream &operator<<(std::ostream &os, const Token &token) {
     return os << "Token: { Type: " << token.get_type_string() << ", Lexeme: '" << token.lexeme << "', Line: " << token.line << " }";
-}
-
-Token::Token(TokenType type, std::string lexeme, size_t line) {
-    this->type = type;
-    this->lexeme = std::move(lexeme);
-    this->line = line;
-}
-
-bool operator==(const Token& a, const Token& b) {
-    return a.type == b.type && a.lexeme == b.lexeme && a.line == b.line;
-}
-
-bool operator!=(const Token& a, const Token& b) {
-    return !(a == b);
-}
-
-std::string Token::get_type_string() const {
-    std::string type_string = "UNKNOWN";
-    switch (type) {
-        case COLON:
-            type_string = "COLON";
-            break;
-        case PERIOD:
-            type_string = "PERIOD";
-            break;
-        case STRING:
-            type_string = "STRING";
-            break;
-        case BLOCK_START:
-            type_string = "BLOCK_START";
-            break;
-        case BLOCK_END:
-            type_string = "BLOCK_END";
-            break;
-        case IDENTIFIER:
-            type_string = "IDENTIFIER";
-            break;
-        case COMMA:
-            type_string = "COMMA";
-            break;
-        case NUMBER:
-            type_string = "NUMBER";
-            break;
-        default:  // Search for the keyword literal in the map.
-            for (auto [keyword, value] : keywords) {
-                if (value == type) {
-                    type_string = keyword;
-                    std::transform(type_string.begin(), type_string.end(), type_string.begin(), toupper);
-                    break;
-                }
-            }
-            break;
-    }
-    return type_string;
 }

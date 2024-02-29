@@ -1,10 +1,10 @@
 #ifndef CPBPL_COMPILER_H
 #define CPBPL_COMPILER_H
 
-#include <utility>
 #include <vector>
 #include <cstdint>
-#include "scanner.h"
+
+#include "token.h"
 
 typedef uint8_t byte;
 typedef uint32_t number;

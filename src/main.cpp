@@ -1,5 +1,3 @@
-#include <iostream>
-
 #include "../include/scanner.h"
 #include "../include/compiler.h"
 
