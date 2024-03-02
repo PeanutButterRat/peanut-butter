@@ -52,6 +52,12 @@ target_link_libraries(
         token
 )
 
+target_link_libraries(
+        pbpl
+        bytecode
+        vm
+)
+
 # Google Test.
 include(FetchContent)
 FetchContent_Declare(

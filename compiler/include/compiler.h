@@ -7,15 +7,6 @@
 #include "token.h"
 #include "bytecode.h"
 
-enum Opcode {
-    OP_ADD,
-    OP_SUBTRACT,
-    OP_MULTIPLY,
-    OP_DIVIDE,
-    OP_CONSTANT,
-    OP_MODULO,
-};
-
 class Compiler {
     Bytecode code;
     std::vector<Token> tokens;

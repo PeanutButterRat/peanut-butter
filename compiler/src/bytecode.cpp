@@ -14,3 +14,7 @@ Bytecode::Bytecode(std::vector<byte> bytes, std::vector<number> constants) {
     this->bytes = std::move(bytes);
     this->constants = std::move(constants);
 }
+
+byte Bytecode::get_constant(size_t index) {
+    return constants[index];
+}
