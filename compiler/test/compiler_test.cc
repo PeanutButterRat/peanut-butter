@@ -33,3 +33,8 @@ TEST(CompilerTests, ChainedBinaryExpression) {
 
     ASSERT_EQ(expected, actual);
 }
+
+TEST(CompilerTests, InvalidExpressionException) {
+    std::string source = "5 plus define";
+    EXPECT_THROW(compile(source), UnexpectedTokenException);
+}

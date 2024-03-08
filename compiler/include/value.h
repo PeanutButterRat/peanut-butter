@@ -6,6 +6,8 @@
 #include <utility>
 
 typedef int32_t Integer;
+typedef std::string String;
+typedef bool Boolean;
 
 enum Type {
     INTEGER,
@@ -18,9 +20,9 @@ struct Value {
     Type type;
 
     Value(Integer number);
-    Value(std::string string);
+    Value(String string);
     Value(const char* string);
-    explicit Value(bool boolean);
+    explicit Value(Boolean boolean);
 
     Value(const Value& other);
     ~Value();

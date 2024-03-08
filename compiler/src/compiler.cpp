@@ -24,11 +24,11 @@ Bytecode Compiler::parse() {
 }
 
 void Compiler::expression() {
-    constant();
+    value();
 
     while (is_binary_operator(peek())) {
         Opcode operation = binary_operations[next().type];
-        constant();
+        value();
         emit(operation);
     }
 }
@@ -37,10 +37,41 @@ Token Compiler::peek() {
     return tokens[index];
 }
 
-void Compiler::constant() {
+void Compiler::value() {
+    switch (peek().type) {
+        case IDENTIFIER:
+            break;
+        case NUMBER:
+            number();
+            break;
+        case TEXT:
+            text();
+            break;
+        case TRUE:
+        case FALSE:
+            boolean();
+            break;
+        default:
+            throw UnexpectedTokenException("value", next());
+    }
+}
+
+void Compiler::number() {
     Integer number = stoi(next().lexeme);
     emit(OP_CONSTANT);
     emit(code.add_constant(number));
+}
+
+void Compiler::text() {
+    String text = next().lexeme;
+    emit(OP_CONSTANT);
+    emit(code.add_constant(text));
+}
+
+void Compiler::boolean() {
+    Boolean boolean = next().lexeme != "false";
+    emit(OP_CONSTANT);
+    emit(code.add_constant(Value(boolean)));
 }
 
 bool Compiler::is_binary_operator(const Token &token) {
@@ -77,11 +108,16 @@ void Bytecode::disassemble() const {
                 break;
             case OP_CONSTANT: {
                 size_t index = *(++it);
-                cout << "CONSTANT [index: " << index << ", value: " << constants[index] << "]" << endl;
+                Value constant = constants[index];
+                cout << "CONSTANT [index: " << index << ", value: " << constant << ", type: " << constant.get_type_string() << "]" << endl;
+                break;
+            }
+            case OP_MODULO: {
+                cout << "MOD" << endl;
                 break;
             }
             default:
-                cout << "[UNKNOWN OPCODE]" << endl;
+                cout << "[UNKNOWN OPCODE] (" << (unsigned int) opcode << ")" << endl;
                 break;
         }
     }

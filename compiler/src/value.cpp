@@ -3,8 +3,8 @@
 #include "../include/value.h"
 
 #define AS_INTEGER(value) *static_cast<Integer*>(value.ref)
-#define AS_STRING(value) *static_cast<std::string*>(value.ref)
-#define AS_BOOLEAN(value) *static_cast<bool*>(value.ref)
+#define AS_STRING(value) *static_cast<String*>(value.ref)
+#define AS_BOOLEAN(value) *static_cast<Boolean*>(value.ref)
 
 #define SAME_TYPE_GUARD(a, b, op) if (a.type != b.type) throw InvalidOperationException(a, b, op)
 #define BAD_TYPE_GUARD(a, bad_type, op) if (a.type == bad_type) throw InvalidOperationException(a, op)
@@ -24,24 +24,24 @@ Value::Value(Integer number) {
     *static_cast<Integer*>(ref) = number;
 }
 
-Value::Value(std::string string) {
+Value::Value(String string) {
     type = STRING;
-    ref = new std::string;
-    *static_cast<std::string*>(ref) = std::move(string);
+    ref = new String;
+    *static_cast<String*>(ref) = std::move(string);
 }
 
 
 Value::Value(const char *string) {
     type = STRING;
-    ref = new std::string;
-    *static_cast<std::string*>(ref) = std::move(std::string(string));
+    ref = new String;
+    *static_cast<String*>(ref) = std::move(String(string));
 }
 
 
-Value::Value(bool boolean) {
+Value::Value(Boolean boolean) {
     type = BOOLEAN;
-    ref = new bool;
-    *static_cast<bool*>(ref) = boolean;
+    ref = new Boolean;
+    *static_cast<Boolean*>(ref) = boolean;
 }
 
 Value::Value(const Value &other) {
@@ -53,13 +53,13 @@ Value::Value(const Value &other) {
             break;
         case BOOLEAN:
             type = BOOLEAN;
-            ref = new bool;
-            *static_cast<bool*>(ref) = AS_BOOLEAN(other);
+            ref = new Boolean;
+            *static_cast<Boolean*>(ref) = AS_BOOLEAN(other);
             break;
         default:
             type = STRING;
-            ref = new std::string;
-            *static_cast<std::string*>(ref) = AS_STRING(other);
+            ref = new String;
+            *static_cast<String*>(ref) = AS_STRING(other);
             break;
     }
 }
@@ -69,30 +69,32 @@ std::ostream &operator<<(std::ostream &os, const Value &value) {
     switch (value.type) {
         case INTEGER:
             return os << AS_INTEGER(value);
-        case BOOLEAN:
-            return os << AS_BOOLEAN(value);
+        case BOOLEAN: {
+            std::string string = AS_BOOLEAN(value) ? "true" : "false";
+            return os << string;
+        }
         default:
             return os << AS_STRING(value);
     };
 }
 
-bool operator==(const Value &a, const Value &b) {
+Boolean operator==(const Value &a, const Value &b) {
     SAME_TYPE_GUARD(a, b, "equality");
     BINARY_OPERATION(a, b, ==);
 }
 
-bool operator!=(const Value &a, const Value &b) {
+Boolean operator!=(const Value &a, const Value &b) {
     SAME_TYPE_GUARD(a, b, "inequality");
     BINARY_OPERATION(a, b, !=)
 }
 
-bool operator>(const Value &a, const Value &b) {
+Boolean operator>(const Value &a, const Value &b) {
     SAME_TYPE_GUARD(a, b, "greater than");
     BAD_TYPE_GUARD(a, BOOLEAN, "greater than");
     BINARY_OPERATION(a, b, >);
 }
 
-bool operator<(const Value &a, const Value &b) {
+Boolean operator<(const Value &a, const Value &b) {
     SAME_TYPE_GUARD(a, b, "less than");
     BAD_TYPE_GUARD(a, BOOLEAN, "less than");
     BINARY_OPERATION(a, b, <);
@@ -128,7 +130,7 @@ Value operator%(const Value &a, const Value &b) {
     BINARY_OPERATION(a, b, %);
 }
 
-std::string Value::get_type_string() const {
+String Value::get_type_string() const {
     switch (type) {
         case INTEGER:
             return "Integer";
@@ -146,10 +148,10 @@ Value::~Value() {
                  delete static_cast<Integer*>(ref);
                  break;
             case BOOLEAN:
-                delete static_cast<bool*>(ref);
+                delete static_cast<Boolean*>(ref);
                 break;
             default:
-                delete static_cast<std::string*>(ref);
+                delete static_cast<String*>(ref);
                 break;
         }
     }
