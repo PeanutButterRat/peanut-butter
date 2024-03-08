@@ -38,7 +38,7 @@ Token Compiler::peek() {
 }
 
 void Compiler::constant() {
-    number number = stoi(next().lexeme);
+    Integer number = stoi(next().lexeme);
     emit(OP_CONSTANT);
     emit(code.add_constant(number));
 }
@@ -47,7 +47,7 @@ bool Compiler::is_binary_operator(const Token &token) {
     return binary_operations.find(token.type) != binary_operations.end();
 }
 
-size_t Bytecode::add_constant(number constant) {
+size_t Bytecode::add_constant(const Value& constant) {
     constants.emplace_back(constant);
     return constants.size() - 1;
 }

@@ -6,12 +6,12 @@
 #include "../../compiler/include/bytecode.h"
 
 class VM {
-    std::stack<byte> stack;
+    std::stack<Value> stack;
     Bytecode* code;
     size_t pc;
 
     byte next();
-    byte pop();
+    Value pop();
 
 public:
     explicit VM(Bytecode* code);

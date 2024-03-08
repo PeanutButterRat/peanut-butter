@@ -4,8 +4,9 @@
 #include <cstdint>
 #include <vector>
 
+#include "value.h"
+
 typedef uint8_t byte;
-typedef uint32_t number;
 
 enum Opcode {
     OP_ADD,
@@ -18,18 +19,18 @@ enum Opcode {
 };
 
 class Bytecode {
-    std::vector<number> constants;
+    std::vector<Value> constants;
 
 public:
     std::vector<byte> bytes;
 
-    size_t add_constant(number constant);
-    byte get_constant(size_t index);
+    size_t add_constant(const Value& constant);
+    Value get_constant(size_t index);
     void add(byte byte);
     void disassemble() const;
 
     Bytecode() = default;
-    Bytecode(std::vector<byte> bytes, std::vector<number> constants);
+    Bytecode(std::vector<byte> bytes, std::vector<Value> constants);
     friend bool operator== (const Bytecode& a, const Bytecode& b);
     friend bool operator!= (const Bytecode& a, const Bytecode& b);
 };

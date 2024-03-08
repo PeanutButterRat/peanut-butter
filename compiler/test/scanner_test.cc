@@ -14,33 +14,33 @@ TEST(ScannerTests, AdditionFunction) {
             {WITH, "with", 1},
             {IDENTIFIER, "a", 1},
             {COMMA, ",", 1},
-            {IDENTIFIER, "b", 1},
-            {COMMA, ",", 1},
-            {IDENTIFIER, "c", 1},
-            {AS, "as", 1},
-            {COLON, ":", 1},
+            {IDENTIFIER,    "b",      1},
+            {COMMA,         ",",      1},
+            {IDENTIFIER,    "c",      1},
+            {AS,            "as",     1},
+            {COLON,         ":",      1},
 
-            {BLOCK_START, "", 2},
-            {LET, "let", 2},
-            {IDENTIFIER, "x", 2},
-            {BE, "be", 2},
-            {NUMBER, "5", 2},
-            {PERIOD, ".", 2},
+            {BLOCK_START,   "",       2},
+            {LET,           "let",    2},
+            {IDENTIFIER,    "x",      2},
+            {BE,            "be",     2},
+            {NUMBER,       "5",      2},
+            {PERIOD,        ".",      2},
 
-            {LET, "let", 3},
-            {IDENTIFIER, "y", 3},
-            {BE, "be", 3},
-            {NUMBER, "10", 3},
-            {PERIOD, ".", 3},
+            {LET,           "let",    3},
+            {IDENTIFIER,    "y",      3},
+            {BE,            "be",     3},
+            {NUMBER,       "10",     3},
+            {PERIOD,        ".",      3},
 
-            {RETURN, "return", 4},
-            {IDENTIFIER, "x", 4},
-            {ADDITION, "plus", 4},
-            {IDENTIFIER, "y", 4},
-            {PERIOD, ".", 4},
+            {RETURN,        "return", 4},
+            {IDENTIFIER,    "x",      4},
+            {ADDITION,      "plus",   4},
+            {IDENTIFIER,    "y",      4},
+            {PERIOD,        ".",      4},
 
-            {BLOCK_END, "", 5},
-            {END_OF_STREAM, "", 5}
+            {BLOCK_END,     "",       5},
+            {END_OF_STREAM, "",       5}
     };
 
     std::vector<Token> actual = Scanner{source}.tokenize();
@@ -55,27 +55,27 @@ TEST(ScannerTests, Blocks) {
                          "\tline 4.";
 
     std::vector<Token> expected {
-            {IDENTIFIER, "line", 1},
-            {NUMBER, "1", 1},
-            {PERIOD, ".", 1},
+            {IDENTIFIER,    "line", 1},
+            {NUMBER,       "1",    1},
+            {PERIOD,        ".",    1},
 
-            {BLOCK_START, "", 2},
-            {IDENTIFIER, "line", 2},
-            {NUMBER, "2", 2},
-            {PERIOD, ".", 2},
+            {BLOCK_START,   "",     2},
+            {IDENTIFIER,    "line", 2},
+            {NUMBER,       "2",    2},
+            {PERIOD,        ".",    2},
 
-            {BLOCK_START, "", 3},
-            {IDENTIFIER, "line", 3},
-            {NUMBER, "3", 3},
-            {PERIOD, ".", 3},
+            {BLOCK_START,   "",     3},
+            {IDENTIFIER,    "line", 3},
+            {NUMBER,       "3",    3},
+            {PERIOD,        ".",    3},
 
-            {BLOCK_END, "", 4},
-            {IDENTIFIER, "line", 4},
-            {NUMBER, "4", 4},
-            {PERIOD, ".", 4},
+            {BLOCK_END,     "",     4},
+            {IDENTIFIER,    "line", 4},
+            {NUMBER,       "4",    4},
+            {PERIOD,        ".",    4},
 
-            {BLOCK_END, "", 5},
-            {END_OF_STREAM, "", 5}
+            {BLOCK_END,     "",     5},
+            {END_OF_STREAM, "",     5}
     };
 
     std::vector<Token> actual = Scanner{source}.tokenize();

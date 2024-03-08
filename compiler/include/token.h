@@ -25,7 +25,7 @@ enum TokenType {
     TO,
     BLOCK_START,
     BLOCK_END,
-    STRING,
+    TEXT,
     PERIOD,
     WITH,
     COMMA,

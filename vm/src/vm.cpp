@@ -48,7 +48,7 @@ void VM::run() {
                 break;
             }
             case OP_PRINT: {
-                std::cout << (int) pop() << std::endl;
+                std::cout << pop() << std::endl;
                 break;
             }
             default:
@@ -61,7 +61,7 @@ byte VM::next() {
     return code->bytes[pc++];
 }
 
-byte VM::pop() {
+Value VM::pop() {
     auto top = stack.top();
     stack.pop();
     return top;

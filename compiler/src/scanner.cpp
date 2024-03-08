@@ -107,7 +107,7 @@ void Scanner::string(char terminator) {
     if (next() != terminator) { throw ScannerException("Unterminated string literal", line); }
     auto word = source.substr(start + 1, index - start - 2);  // Don't include the quotes.
 
-    tokens.emplace_back(STRING, word, line);
+    tokens.emplace_back(TEXT, word, line);
 }
 
 bool Scanner::is_identifier_char(char c) {

@@ -21,6 +21,12 @@ add_library(
 )
 
 add_library(
+        value
+        compiler/src/value.cpp
+        compiler/include/value.h
+)
+
+add_library(
         compiler
         compiler/src/compiler.cpp
         compiler/include/compiler.h
@@ -50,11 +56,13 @@ target_link_libraries(
         bytecode
         compiler
         token
+        value
 )
 
 target_link_libraries(
         pbpl
         bytecode
+        value
         vm
 )
 
@@ -90,6 +98,7 @@ add_executable(
 target_link_libraries(
         compiler_test
         compiler
+        value
         scanner
         token
         bytecode

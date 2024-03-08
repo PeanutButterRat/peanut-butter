@@ -1,5 +1,3 @@
-#include <iostream>
-
 #include "../include/vm.h"
 
 int main() {
@@ -13,7 +11,7 @@ int main() {
                 OP_SUBTRACT,
                 OP_CONSTANT, 3,
                 OP_MULTIPLY,
-                OP_PRINT,
+                OP_PRINT
             },
             {5, 10, 3, 2}
     };

@@ -10,11 +10,11 @@ bool operator!=(const Bytecode &a, const Bytecode &b) {
     return !(a == b);
 }
 
-Bytecode::Bytecode(std::vector<byte> bytes, std::vector<number> constants) {
+Bytecode::Bytecode(std::vector<byte> bytes, std::vector<Value> constants) {
     this->bytes = std::move(bytes);
     this->constants = std::move(constants);
 }
 
-byte Bytecode::get_constant(size_t index) {
+Value Bytecode::get_constant(size_t index) {
     return constants[index];
 }
