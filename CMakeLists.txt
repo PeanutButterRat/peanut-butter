@@ -105,6 +105,21 @@ target_link_libraries(
         GTest::gtest_main
 )
 
+add_executable(
+        vm_test
+        vm/test/vm_test.cc
+)
+
+target_link_libraries(
+        vm_test
+        vm
+        bytecode
+        value
+        GTest::gtest_main
+)
+
+
 include(GoogleTest)
 gtest_discover_tests(scanner_test)
 gtest_discover_tests(compiler_test)
+gtest_discover_tests(vm_test)
