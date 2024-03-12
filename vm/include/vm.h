@@ -2,15 +2,18 @@
 #define CPBPL_VM_H
 
 #include <stack>
+#include <map>
 
 #include "../../compiler/include/bytecode.h"
 
 class VM {
     std::stack<Value> stack;
+    std::map<std::string, Value> globals;
     Bytecode* code;
     size_t pc;
 
-    byte next();
+    Byte next();
+    void push(const Value& value);
     Value pop();
 
 public:

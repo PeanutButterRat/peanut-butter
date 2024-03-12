@@ -10,7 +10,7 @@ bool operator!=(const Bytecode &a, const Bytecode &b) {
     return !(a == b);
 }
 
-Bytecode::Bytecode(std::vector<byte> bytes, std::vector<Value> constants) {
+Bytecode::Bytecode(std::vector<Byte> bytes, std::vector<Value> constants) {
     this->bytes = std::move(bytes);
     this->constants = std::move(constants);
 }
@@ -20,11 +20,16 @@ Value Bytecode::get_constant(size_t index) {
 }
 
 size_t Bytecode::add_constant(const Value& constant) {
+    for (size_t i = 0; i < constants.size(); i++) {
+        if (constants[i] == constant) {
+            return i;
+        }
+    }
     constants.emplace_back(constant);
     return constants.size() - 1;
 }
 
-void Bytecode::add(byte byte) {
+void Bytecode::add(Byte byte) {
     bytes.emplace_back(byte);
 }
 

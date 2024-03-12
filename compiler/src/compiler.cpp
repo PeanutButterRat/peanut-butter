@@ -10,7 +10,7 @@ std::map<TokenType, Opcode> binary_operations {
         { MODULO, OP_MODULO }
 };
 
-void Compiler::emit(uint8_t byte) {
+void Compiler::emit(Byte byte) {
     code.add(byte);
 }
 
@@ -19,7 +19,9 @@ Token Compiler::next() {
 }
 
 Bytecode Compiler::parse() {
-    expression();
+    while (peek().type == LET) {
+        assigment();
+    }
     return code;
 }
 
@@ -40,6 +42,7 @@ Token Compiler::peek() {
 void Compiler::value() {
     switch (peek().type) {
         case IDENTIFIER:
+            identifier();
             break;
         case NUMBER:
             number();
@@ -68,10 +71,34 @@ void Compiler::text() {
     emit(code.add_constant(text));
 }
 
+void Compiler::identifier() {
+    emit(OP_CONSTANT);
+    emit(code.add_constant(next().lexeme));
+}
+
+void Compiler::assigment() {
+    consume(LET);
+    auto name = consume(IDENTIFIER).lexeme;
+    consume(BE);
+    expression();
+    consume(PERIOD);
+
+    emit(OP_ASSIGMENT);
+    emit(code.add_constant(name));
+}
+
 void Compiler::boolean() {
     Boolean boolean = next().lexeme != "false";
     emit(OP_CONSTANT);
     emit(code.add_constant(Value(boolean)));
+}
+
+Token Compiler::consume(TokenType type) {
+    auto token = next();
+    if (token.type != type) {
+        throw UnexpectedTokenException(type, token);
+    }
+    return token;
 }
 
 bool Compiler::is_binary_operator(const Token &token) {

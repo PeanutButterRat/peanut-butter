@@ -12,14 +12,18 @@ class Compiler {
     std::vector<Token> tokens;
     size_t index = 0;
 
-    void emit(byte byte);
+    void emit(Byte byte);
     Token next();
     Token peek();
     void expression();
     void value();
     void number();
     void text();
+    void identifier();
+    void assigment();
     void boolean();
+
+    Token consume(TokenType type);
 
     static bool is_binary_operator(const Token& token);
 
@@ -35,6 +39,11 @@ public:
     explicit UnexpectedTokenException(const std::string& expected, const Token& token) {
         this->reason = "Expected " + expected + " but found token (" + token.get_type_string()
                 + ", " + token.lexeme + ") on line " + std::to_string(token.line) + ".";
+    }
+
+    explicit UnexpectedTokenException(TokenType type, const Token& token) {
+        this->reason = "Expected " + Token::get_type_string(type) + " but found token (" + token.get_type_string()
+                       + ", " + token.lexeme + ") on line " + std::to_string(token.line) + ".";
     }
 
     [[nodiscard]] const char* what() const noexcept override { return reason.c_str(); }

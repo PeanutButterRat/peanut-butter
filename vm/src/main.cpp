@@ -1,7 +1,7 @@
 #include "../include/vm.h"
 
 int main() {
-    // 5 plus 10 minus 3 times 2
+    // let y be 5 plus 10 minus 3 times 12 mod 6.
     Bytecode code {
             {
                 OP_CONSTANT, 0,
@@ -11,9 +11,11 @@ int main() {
                 OP_SUBTRACT,
                 OP_CONSTANT, 3,
                 OP_MULTIPLY,
-                OP_PRINT
+                OP_CONSTANT, 4,
+                OP_MODULO,
+                OP_ASSIGMENT, 5,
             },
-            {5, 10, 3, 2}
+            {5, 10, 3, 12, 6, "y"}
     };
 
     VM test{&code};

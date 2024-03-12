@@ -45,6 +45,8 @@ struct Token {
     friend std::ostream& operator<<(std::ostream& os, const Token& token);
     friend bool operator== (const Token& a, const Token& b);
     friend bool operator!= (const Token& a, const Token& b);
+
+    static std::string get_type_string(TokenType type);
 };
 
 #endif //CPBPL_TOKEN_H

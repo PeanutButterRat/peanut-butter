@@ -48,6 +48,10 @@ bool operator!=(const Token &a, const Token &b) {
 }
 
 std::string Token::get_type_string() const {
+    return Token::get_type_string(this->type);
+}
+
+std::string Token::get_type_string(TokenType type) {
     if (type_strings.find(type) != type_strings.end()) {
         return type_strings[type];
     } else {

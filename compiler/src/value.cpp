@@ -2,20 +2,16 @@
 
 #include "../include/value.h"
 
-#define AS_INTEGER(value) *static_cast<Integer*>(value.ref)
-#define AS_STRING(value) *static_cast<String*>(value.ref)
-#define AS_BOOLEAN(value) *static_cast<Boolean*>(value.ref)
-
 #define SAME_TYPE_GUARD(a, b, op) if (a.type != b.type) throw InvalidOperationException(a, b, op)
 #define BAD_TYPE_GUARD(a, bad_type, op) if (a.type == bad_type) throw InvalidOperationException(a, op)
 #define BINARY_OPERATION(a, b, op) \
     switch (a.type) { \
         case STRING: \
-            return AS_STRING(a) op AS_STRING(b); \
+            return a.string() op b.string(); \
         case BOOLEAN: \
-            return AS_BOOLEAN(a) op AS_BOOLEAN(b); \
+            return a.boolean() op b.boolean(); \
         default: \
-            return AS_INTEGER(a) op AS_INTEGER(b); \
+            return a.integer() op b.integer(); \
 };
 
 Value::Value(Integer number) {
@@ -49,42 +45,71 @@ Value::Value(const Value &other) {
         case INTEGER:
             type = INTEGER;
             ref = new Integer;
-            *static_cast<Integer*>(ref) = AS_INTEGER(other);
+            *static_cast<Integer*>(ref) = other.integer();
             break;
         case BOOLEAN:
             type = BOOLEAN;
             ref = new Boolean;
-            *static_cast<Boolean*>(ref) = AS_BOOLEAN(other);
+            *static_cast<Boolean*>(ref) = other.boolean();
             break;
         default:
             type = STRING;
             ref = new String;
-            *static_cast<String*>(ref) = AS_STRING(other);
+            *static_cast<String*>(ref) = other.string();
             break;
     }
 }
+
+Integer Value::integer() const {
+    if (type != INTEGER) {
+        throw BadCastException(*this, "Integer");
+    }
+
+    return *static_cast<Integer*>(ref);
+}
+
+String Value::string() const {
+    if (type != STRING) {
+        throw BadCastException(*this, "Integer");
+    }
+
+    return *static_cast<String*>(ref);
+}
+
+Boolean Value::boolean() const {
+    if (type != BOOLEAN) {
+        throw BadCastException(*this, "Integer");
+    }
+
+    return *static_cast<Boolean*>(ref);
+}
+
 
 
 std::ostream &operator<<(std::ostream &os, const Value &value) {
     switch (value.type) {
         case INTEGER:
-            return os << AS_INTEGER(value);
+            return os << value.integer();
         case BOOLEAN: {
-            std::string string = AS_BOOLEAN(value) ? "true" : "false";
+            std::string string = value.boolean() ? "true" : "false";
             return os << string;
         }
         default:
-            return os << AS_STRING(value);
+            return os << value.string();
     };
 }
 
 Boolean operator==(const Value &a, const Value &b) {
-    SAME_TYPE_GUARD(a, b, "equality");
+    if (a.type != b.type) {
+        return false;
+    }
     BINARY_OPERATION(a, b, ==);
 }
 
 Boolean operator!=(const Value &a, const Value &b) {
-    SAME_TYPE_GUARD(a, b, "inequality");
+    if (a.type != b.type) {
+        return true;
+    }
     BINARY_OPERATION(a, b, !=)
 }
 

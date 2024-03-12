@@ -24,6 +24,10 @@ struct Value {
     Value(const char* string);
     explicit Value(Boolean boolean);
 
+    [[nodiscard]] Integer integer() const;
+    [[nodiscard]] String string() const;
+    [[nodiscard]] Boolean boolean() const;
+
     Value(const Value& other);
     ~Value();
 
@@ -57,5 +61,17 @@ public:
 
     [[nodiscard]] const char* what() const noexcept override { return reason.c_str(); }
 };
+
+class BadCastException : public std::exception {
+    std::string reason;
+
+public:
+    BadCastException(const Value& value, const std::string& cast) {
+        this->reason = "Could not interpret value of type " + value.get_type_string() + " as type " + cast;
+    }
+
+    [[nodiscard]] const char* what() const noexcept override { return reason.c_str(); }
+};
+
 
 #endif // CPBPL_VALUE_H
