@@ -3,6 +3,7 @@
 #include "../include/vm.h"
 
 VM::VM(Bytecode* code) {
+    this->scope = new Scope;
     this->code = code;
     pc = 0;
 }
@@ -54,24 +55,22 @@ void VM::run() {
             case OP_ASSIGMENT: {
                 auto index = next();
                 std::string identifier =  code->get_constant(index).string();
-
-                if (globals.find(identifier) != globals.end()) {
-                    throw RuntimeException("Redefinition of " + identifier  + "' is not allowed.");
-                }
-
-                globals.emplace(identifier, pop());
+                scope->define(identifier, pop());
+                break;
             }
-            break;
             case OP_IDENTIFIER: {
                 auto index = next();
                 std::string identifier =  code->get_constant(index).string();
-
-                auto it = globals.find(identifier);
-                if (it == globals.end()) {
-                    throw RuntimeException("'" + identifier  + "' is undefined.");
-                }
-
-                push(it->second);
+                push(scope->resolve(identifier));
+                break;
+            }
+            case OP_ENSCOPE: {
+                enscope();
+                break;
+            }
+            case OP_DESCOPE: {
+                descope();
+                break;
             }
             default:
                 std::cout << "Unknown opcode: " << opcode << std::endl;
@@ -91,4 +90,17 @@ Value VM::pop() {
 
 void VM::push(const Value& value) {
     stack.push(value);
+}
+
+void VM::enscope() {
+    scope = scope->push();
+}
+
+void VM::descope() {
+    auto shallower = scope->pop();
+    if (!shallower) {
+        throw RuntimeException("Attempted to remove global scope.");
+    }
+    delete scope;
+    scope = shallower;
 }

@@ -18,6 +18,8 @@ enum Opcode {
     OP_PRINT,
     OP_ASSIGMENT,
     OP_IDENTIFIER,
+    OP_ENSCOPE,
+    OP_DESCOPE,
 };
 
 class Bytecode {

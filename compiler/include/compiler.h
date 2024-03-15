@@ -15,6 +15,7 @@ class Compiler {
     void emit(Byte byte);
     Token next();
     Token peek();
+    bool check(TokenType next);
     void expression();
     void value();
     void number();
@@ -22,6 +23,8 @@ class Compiler {
     void identifier();
     void assigment();
     void boolean();
+    void block();
+    void declarations();
 
     Token consume(TokenType type);
 

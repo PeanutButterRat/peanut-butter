@@ -7,15 +7,15 @@ int main() {
                 OP_CONSTANT, 0,
                 OP_CONSTANT, 1,
                 OP_ADD,
-                OP_CONSTANT, 2,
-                OP_SUBTRACT,
+                OP_ENSCOPE,
+                OP_ASSIGMENT, 2,
+                OP_IDENTIFIER, 2,
                 OP_CONSTANT, 3,
-                OP_MULTIPLY,
-                OP_CONSTANT, 4,
-                OP_MODULO,
-                OP_ASSIGMENT, 5,
+                OP_ADD,
+                OP_PRINT,
+                OP_DESCOPE
             },
-            {5, 10, 3, 12, 6, "y"}
+            {5, 10, "a", 20}
     };
 
     VM test{&code};

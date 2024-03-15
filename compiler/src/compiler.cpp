@@ -19,9 +19,7 @@ Token Compiler::next() {
 }
 
 Bytecode Compiler::parse() {
-    while (peek().type == LET) {
-        assigment();
-    }
+    declarations();
     return code;
 }
 
@@ -60,20 +58,20 @@ void Compiler::value() {
 }
 
 void Compiler::number() {
-    Integer number = stoi(next().lexeme);
+    Integer number = stoi(consume(NUMBER).lexeme);
     emit(OP_CONSTANT);
     emit(code.add_constant(number));
 }
 
 void Compiler::text() {
-    String text = next().lexeme;
+    String text = consume(TEXT).lexeme;
     emit(OP_CONSTANT);
     emit(code.add_constant(text));
 }
 
 void Compiler::identifier() {
     emit(OP_CONSTANT);
-    emit(code.add_constant(next().lexeme));
+    emit(code.add_constant(consume(IDENTIFIER).lexeme));
 }
 
 void Compiler::assigment() {
@@ -103,4 +101,29 @@ Token Compiler::consume(TokenType type) {
 
 bool Compiler::is_binary_operator(const Token &token) {
     return binary_operations.find(token.type) != binary_operations.end();
+}
+
+void Compiler::block() {
+    consume(BLOCK_START);
+    declarations();
+    consume(BLOCK_END);
+}
+
+bool Compiler::check(TokenType next) {
+    return peek().type == next;
+}
+
+void Compiler::declarations() {
+    while (!check(END_OF_STREAM)) {
+        switch (peek().type) {
+            case LET:
+                assigment();
+                break;
+            case BLOCK_START:
+                block();
+                break;
+            default:
+                return;
+        }
+    }
 }

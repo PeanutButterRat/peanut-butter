@@ -40,18 +40,22 @@ void Bytecode::disassemble() const {
         auto opcode = *it;
 
         switch (opcode) {
-            case OP_ADD:
+            case OP_ADD: {
                 cout << "ADD" << endl;
                 break;
-            case OP_SUBTRACT:
-                cout << "SUBTRACT"  << endl;
+            }
+            case OP_SUBTRACT: {
+                cout << "SUBTRACT" << endl;
                 break;
-            case OP_MULTIPLY:
-                cout << "MULTIPLY"  << endl;
+            }
+            case OP_MULTIPLY: {
+                cout << "MULTIPLY" << endl;
                 break;
-            case OP_DIVIDE:
-                cout << "DIVIDE"  << endl;
+            }
+            case OP_DIVIDE: {
+                cout << "DIVIDE" << endl;
                 break;
+            }
             case OP_CONSTANT: {
                 size_t index = *(++it);
                 Value constant = constants[index];
@@ -60,6 +64,30 @@ void Bytecode::disassemble() const {
             }
             case OP_MODULO: {
                 cout << "MOD" << endl;
+                break;
+            }
+            case OP_PRINT: {
+                cout << "PRINT" << endl;
+                break;
+            }
+            case OP_ASSIGMENT: {
+                size_t index = *(++it);
+                Value constant = constants[index];
+                cout << "ASSIGMENT [identifier: " << constants[index].string() << "]" << endl;
+                break;
+            }
+            case OP_IDENTIFIER: {
+                size_t index = *(++it);
+                Value constant = constants[index];
+                cout << "IDENTIFIER [index: " << index << ", name: " << constants[index].string() << "]" << endl;
+                break;
+            }
+            case OP_ENSCOPE: {
+                cout << "ENSCOPE" << endl;
+                break;
+            }
+            case OP_DESCOPE: {
+                cout << "DESCOPE" << endl;
                 break;
             }
             default:

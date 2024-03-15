@@ -20,6 +20,13 @@ add_library(
         vm/include/vm.h
 )
 
+
+add_library(
+        scope
+        vm/src/scope.cpp
+        vm/include/scope.h
+)
+
 add_library(
         value
         compiler/src/value.cpp
@@ -64,6 +71,7 @@ target_link_libraries(
         bytecode
         value
         vm
+        scope
 )
 
 # Google Test.
@@ -115,11 +123,24 @@ target_link_libraries(
         vm
         bytecode
         value
+        scope
         GTest::gtest_main
 )
 
+add_executable(
+        scope_test
+        vm/test/scope_test.cc
+)
+
+target_link_libraries(
+        scope_test
+        scope
+        value
+        GTest::gtest_main
+)
 
 include(GoogleTest)
 gtest_discover_tests(scanner_test)
 gtest_discover_tests(compiler_test)
 gtest_discover_tests(vm_test)
+gtest_discover_tests(scope_test)

@@ -5,16 +5,20 @@
 #include <map>
 
 #include "../../compiler/include/bytecode.h"
+#include "scope.h"
 
 class VM {
     std::stack<Value> stack;
-    std::map<std::string, Value> globals;
+    Scope* scope;
     Bytecode* code;
     size_t pc;
 
     Byte next();
     void push(const Value& value);
     Value pop();
+
+    void enscope();
+    void descope();
 
 public:
     explicit VM(Bytecode* code);

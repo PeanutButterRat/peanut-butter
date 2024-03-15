@@ -2,7 +2,9 @@
 #include "../include/compiler.h"
 
 int main() {
-    std::string source = "5 plus 10 minus 3 times 12";
+    std::string source = "let a be 5.\n"
+                         "\tlet a be 6.\n"
+                         "let b be 4.";
     Scanner scanner{source};
     std::vector<Token> tokens = scanner.tokenize();
 
