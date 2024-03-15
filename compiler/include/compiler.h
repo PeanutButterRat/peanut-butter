@@ -14,7 +14,7 @@ class Compiler {
 
     size_t emit(Byte byte);
     Token next();
-    Token peek();
+    TokenType peek() const;
     bool check(TokenType next);
     void expression();
     void value();
@@ -32,7 +32,7 @@ class Compiler {
 
     Token consume(TokenType type);
 
-    static bool is_binary_operator(const Token& token);
+    static bool is_binary_operator(TokenType type);
 
 public:
     Bytecode parse();

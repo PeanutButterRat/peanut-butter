@@ -36,12 +36,12 @@ void Compiler::expression() {
     }
 }
 
-Token Compiler::peek() {
-    return tokens[index];
+TokenType Compiler::peek() const {
+    return tokens[index].type;
 }
 
 void Compiler::value() {
-    switch (peek().type) {
+    switch (peek()) {
         case IDENTIFIER:
             identifier();
             break;
@@ -102,8 +102,8 @@ Token Compiler::consume(TokenType type) {
     return token;
 }
 
-bool Compiler::is_binary_operator(const Token &token) {
-    return binary_operations.find(token.type) != binary_operations.end();
+bool Compiler::is_binary_operator(TokenType type) {
+    return binary_operations.find(type) != binary_operations.end();
 }
 
 void Compiler::block() {
@@ -116,12 +116,12 @@ void Compiler::block() {
 }
 
 bool Compiler::check(TokenType next) {
-    return peek().type == next;
+    return peek() == next;
 }
 
 void Compiler::declarations() {
     while (!check(END_OF_STREAM)) {
-        switch (peek().type) {
+        switch (peek()) {
             case LET:
                 assigment();
                 break;
