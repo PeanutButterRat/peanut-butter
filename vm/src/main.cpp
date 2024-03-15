@@ -8,7 +8,7 @@ int main() {
                 OP_CONSTANT, 1,
                 OP_ADD,
                 OP_ENSCOPE,
-                OP_ASSIGMENT, 2,
+                OP_DECLARATION, 2,
                 OP_IDENTIFIER, 2,
                 OP_CONSTANT, 3,
                 OP_ADD,

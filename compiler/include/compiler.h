@@ -22,6 +22,7 @@ class Compiler {
     void number();
     void text();
     void identifier();
+    void declaration();
     void assigment();
     void boolean();
     void block();

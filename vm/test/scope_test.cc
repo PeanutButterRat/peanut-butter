@@ -41,3 +41,18 @@ TEST(ScopeTests, UndefinedVariable) {
 
     EXPECT_THROW(scope->resolve("b"), ScopeException);
 }
+
+TEST(ScopeTests, DefinedAssigment) {
+    auto scope = new Scope;
+    scope->define("a", 5);
+    scope->assign("a", 10);
+
+    EXPECT_EQ(scope->resolve("a"), 10);
+}
+
+TEST(ScopeTests, UndefinedAssigment) {
+    auto scope = new Scope;
+    scope->define("a", 5);
+
+    EXPECT_THROW(scope->assign("b", 10), ScopeException);
+}

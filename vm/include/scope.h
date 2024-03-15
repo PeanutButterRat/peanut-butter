@@ -14,6 +14,7 @@ class Scope {
 public:
     Value resolve(const std::string& identifier);
     void define(const std::string& identifier, const Value& value);
+    void assign(const std::string& identifier, const Value& value);
 
     Scope* push();
     Scope* pop();

@@ -16,6 +16,7 @@ enum Opcode {
     OP_CONSTANT,
     OP_MODULO,
     OP_PRINT,
+    OP_DECLARATION,
     OP_ASSIGMENT,
     OP_IDENTIFIER,
     OP_ENSCOPE,

@@ -21,6 +21,19 @@ void Scope::define(const std::string &identifier, const Value &value) {
     }
 }
 
+void Scope::assign(const std::string &identifier, const Value &value) {
+    auto it = variables.find(identifier);
+
+    if (it != variables.end()) {
+        it->second = value;
+    } else if (shallower) {
+        shallower->resolve(identifier);
+    } else {
+        throw ScopeException(identifier + " is undefined.");
+    }
+}
+
+
 Scope *Scope::push() {
     auto scope = new Scope;
     deeper = scope;

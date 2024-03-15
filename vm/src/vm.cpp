@@ -52,11 +52,16 @@ void VM::run() {
                 std::cout << pop() << std::endl;
                 break;
             }
-            case OP_ASSIGMENT: {
+            case OP_DECLARATION: {
                 auto index = next();
                 std::string identifier =  code->get_constant(index).string();
                 scope->define(identifier, pop());
                 break;
+            }
+            case OP_ASSIGMENT: {
+                auto index = next();
+                std::string identifier =  code->get_constant(index).string();
+                scope->assign(identifier, pop());
             }
             case OP_IDENTIFIER: {
                 auto index = next();

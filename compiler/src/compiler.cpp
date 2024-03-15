@@ -77,7 +77,7 @@ void Compiler::identifier() {
     emit(code.add_constant(consume(IDENTIFIER).lexeme));
 }
 
-void Compiler::assigment() {
+void Compiler::declaration() {
     consume(LET);
     auto name = consume(IDENTIFIER).lexeme;
     consume(BE);
@@ -87,6 +87,18 @@ void Compiler::assigment() {
     emit(OP_ASSIGMENT);
     emit(code.add_constant(name));
 }
+
+void Compiler::assigment() {
+    consume(SET);
+    auto name = consume(IDENTIFIER).lexeme;
+    consume(TO);
+    expression();
+    consume(PERIOD);
+
+    emit(OP_DECLARATION);
+    emit(code.add_constant(name));
+}
+
 
 void Compiler::boolean() {
     Boolean boolean = next().lexeme != "false";
@@ -123,6 +135,9 @@ void Compiler::declarations() {
     while (!check(END_OF_STREAM)) {
         switch (peek()) {
             case LET:
+                declaration();
+                break;
+            case SET:
                 assigment();
                 break;
             case BLOCK_START:
