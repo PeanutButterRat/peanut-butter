@@ -20,6 +20,8 @@ enum Opcode {
     OP_IDENTIFIER,
     OP_ENSCOPE,
     OP_DESCOPE,
+    OP_JUMP_IF_FALSE,
+    OP_JUMP,
 };
 
 class Bytecode {
@@ -29,8 +31,10 @@ public:
     std::vector<Byte> bytes;
 
     size_t add_constant(const Value& constant);
+    size_t size() const;
     Value get_constant(size_t index);
     void add(Byte byte);
+    void set(size_t index, Byte byte);
     void disassemble() const;
 
     Bytecode() = default;

@@ -39,3 +39,32 @@ TEST(CompilerTests, InvalidExpressionException) {
     std::string source = "let y be 5 plus define";
     EXPECT_THROW(compile(source), UnexpectedTokenException);
 }
+
+TEST(CompilerTests, ControlFlowIfOtherwise) {
+    std::string source = "let a be 5.\n"
+                         "if a:\n"
+                            "\tlet b be 3.\n"
+                         "otherwise:\n"
+                            "\tlet c be 4.";
+    Bytecode expected {
+        {
+                OP_CONSTANT, 0,
+                OP_ASSIGMENT, 1,
+                OP_IDENTIFIER, 1,
+                OP_JUMP_IF_FALSE, 7,
+                OP_ENSCOPE,
+                OP_CONSTANT, 2,
+                OP_ASSIGMENT, 3,
+                OP_DESCOPE,
+                OP_JUMP, 7,
+                OP_ENSCOPE,
+                OP_CONSTANT, 4,
+                OP_ASSIGMENT, 5,
+                OP_DESCOPE
+            },
+            {5, "a", 3, "b", 4, "c"}
+    };
+    auto actual = compile(source);
+
+    ASSERT_EQ(expected, actual);
+}

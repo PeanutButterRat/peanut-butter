@@ -181,3 +181,21 @@ Value::~Value() {
         }
     }
 }
+
+bool Value::truthy() const {
+    if (!ref) {
+        return false;
+    }
+    switch (type) {
+        case INTEGER:
+            return integer() != 0;
+        case BOOLEAN:
+            return boolean();
+        default:
+            return !string().empty();
+    }
+}
+
+bool Value::falsey() const {
+    return !truthy();
+}

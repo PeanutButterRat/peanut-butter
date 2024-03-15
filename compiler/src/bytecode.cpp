@@ -90,10 +90,28 @@ void Bytecode::disassemble() const {
                 cout << "DESCOPE" << endl;
                 break;
             }
+            case OP_JUMP_IF_FALSE: {
+                size_t offset = *(++it);
+                cout << "JUMP IF FALSE [offset: " << offset << "]" << endl;
+                break;
+            }
+            case OP_JUMP: {
+                size_t offset = *(++it);
+                cout << "JUMP [offset: " << offset << "]" << endl;
+                break;
+            }
             default:
                 cout << "[UNKNOWN OPCODE] (" << (unsigned int) opcode << ")" << endl;
                 break;
         }
     }
+}
+
+size_t Bytecode::size() const {
+    return bytes.size();
+}
+
+void Bytecode::set(size_t index, Byte byte) {
+    bytes[index] = byte;
 }
 

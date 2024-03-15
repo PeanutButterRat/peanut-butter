@@ -12,7 +12,7 @@ class Compiler {
     std::vector<Token> tokens;
     size_t index = 0;
 
-    void emit(Byte byte);
+    size_t emit(Byte byte);
     Token next();
     Token peek();
     bool check(TokenType next);
@@ -25,6 +25,10 @@ class Compiler {
     void boolean();
     void block();
     void declarations();
+    void conditional();
+    void otherwise();
+    size_t jump(Byte instruction);
+    void patch(size_t jump);
 
     Token consume(TokenType type);
 

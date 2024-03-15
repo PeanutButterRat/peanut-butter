@@ -10,8 +10,10 @@ std::map<TokenType, Opcode> binary_operations {
         { MODULO, OP_MODULO }
 };
 
-void Compiler::emit(Byte byte) {
+size_t Compiler::emit(Byte byte) {
+    auto spot = code.size();
     code.add(byte);
+    return spot;
 }
 
 Token Compiler::next() {
@@ -20,6 +22,7 @@ Token Compiler::next() {
 
 Bytecode Compiler::parse() {
     declarations();
+    consume(END_OF_STREAM);
     return code;
 }
 
@@ -70,7 +73,7 @@ void Compiler::text() {
 }
 
 void Compiler::identifier() {
-    emit(OP_CONSTANT);
+    emit(OP_IDENTIFIER);
     emit(code.add_constant(consume(IDENTIFIER).lexeme));
 }
 
@@ -105,8 +108,11 @@ bool Compiler::is_binary_operator(const Token &token) {
 
 void Compiler::block() {
     consume(BLOCK_START);
+    emit(OP_ENSCOPE);
     declarations();
+    emit(OP_DESCOPE);
     consume(BLOCK_END);
+
 }
 
 bool Compiler::check(TokenType next) {
@@ -122,8 +128,43 @@ void Compiler::declarations() {
             case BLOCK_START:
                 block();
                 break;
+            case IF:
+                conditional();
+                break;
             default:
                 return;
         }
     }
+}
+
+void Compiler::conditional() {
+    consume(IF);
+    expression();
+    consume(COLON);
+    auto location = jump(OP_JUMP_IF_FALSE);
+    block();
+    patch(location);
+
+    if (check(OTHERWISE)) {
+        otherwise();
+    }
+}
+
+void Compiler::otherwise() {
+    consume(OTHERWISE);
+    consume(COLON);
+    auto location = jump(OP_JUMP);
+    block();
+    patch(location);
+}
+
+size_t Compiler::jump(Byte instruction) {
+    emit(instruction);
+    Byte placeholder = 0xff;
+    return emit(placeholder);
+}
+
+void Compiler::patch(size_t location) {
+    size_t offset = code.size() - location;
+    code.set(location, offset);
 }

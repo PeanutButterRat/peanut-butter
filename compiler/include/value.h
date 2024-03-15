@@ -32,6 +32,9 @@ struct Value {
     ~Value();
 
     [[nodiscard]] std::string get_type_string() const;
+    [[nodiscard]] bool truthy() const;
+    [[nodiscard]] bool falsey() const;
+
 
     friend std::ostream& operator<<(std::ostream& os, const Value& token);
     friend bool operator==(const Value& a, const Value& b);

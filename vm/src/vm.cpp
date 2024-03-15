@@ -72,6 +72,18 @@ void VM::run() {
                 descope();
                 break;
             }
+            case OP_JUMP_IF_FALSE: {
+                auto offset = next();
+                if (pop().falsey()) {
+                    pc += offset;
+                }
+                break;
+            }
+            case OP_JUMP: {
+                auto offset = next();
+                pc += offset;
+                break;
+            }
             default:
                 std::cout << "Unknown opcode: " << opcode << std::endl;
         }
