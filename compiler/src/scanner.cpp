@@ -2,7 +2,7 @@
 
 #include "../include/scanner.h"
 
-const std::map<std::string, TokenType> keywords {
+const std::unordered_map<std::string, TokenType> keywords {
         { "define", DEFINE },
         { "as", AS },
         { "set", SET },
@@ -22,6 +22,7 @@ const std::map<std::string, TokenType> keywords {
         { "with", WITH },
         { "return", RETURN },
         { "mod", MODULO },
+        { "while", WHILE },
 };
 
 std::vector<Token> Scanner::tokenize() {
@@ -89,7 +90,7 @@ void Scanner::word() {
 
     while (is_identifier_char(peek())) { next(); }
     auto word = source.substr(start, index - start);
-    auto type = keywords.count(word) > 0 ? keywords.at(word) : IDENTIFIER;
+    auto type = keywords.find(word) != keywords.end() ? keywords.at(word) : IDENTIFIER;
 
     tokens.emplace_back(type, word, line);
 }

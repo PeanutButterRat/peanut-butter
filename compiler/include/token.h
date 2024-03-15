@@ -31,6 +31,7 @@ enum TokenType {
     COMMA,
     RETURN,
     MODULO,
+    WHILE,
     END_OF_STREAM
 };
 

@@ -30,6 +30,7 @@ std::map<TokenType, std::string> type_strings{
         {COMMA,          "COMMA"},
         {RETURN,         "RETURN"},
         {MODULO,         "MODULO"},
+        {WHILE,          "WHILE"},
         {END_OF_STREAM,  "END_OF_STREAM"},
 };
 

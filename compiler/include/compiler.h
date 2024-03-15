@@ -14,6 +14,7 @@ class Compiler {
 
     size_t emit(Byte byte);
     Token next();
+    Token consume(TokenType type);
     TokenType peek() const;
     bool check(TokenType next);
     void expression();
@@ -29,8 +30,6 @@ class Compiler {
     void otherwise();
     size_t jump(Byte instruction);
     void patch(size_t jump);
-
-    Token consume(TokenType type);
 
     static bool is_binary_operator(TokenType type);
 
