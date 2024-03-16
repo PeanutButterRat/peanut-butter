@@ -62,6 +62,7 @@ void VM::run() {
                 auto index = next();
                 std::string identifier =  code->get_constant(index).string();
                 scope->assign(identifier, pop());
+                break;
             }
             case OP_IDENTIFIER: {
                 auto index = next();
@@ -78,14 +79,14 @@ void VM::run() {
                 break;
             }
             case OP_JUMP_IF_FALSE: {
-                auto offset = next();
+                auto offset = next_short();
                 if (pop().falsey()) {
                     pc += offset;
                 }
                 break;
             }
             case OP_JUMP: {
-                auto offset = next();
+                auto offset = next_short();
                 pc += offset;
                 break;
             }
@@ -120,4 +121,11 @@ void VM::descope() {
     }
     delete scope;
     scope = shallower;
+}
+
+Short VM::next_short() {
+    Short value = 0;
+    value |= next() << 8;
+    value |= next();
+    return value;
 }

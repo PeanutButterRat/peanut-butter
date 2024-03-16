@@ -2,6 +2,8 @@
 
 #include "../include/compiler.h"
 
+const Byte placeholder = 0xff;
+
 std::map<TokenType, Opcode> binary_operations {
         { ADDITION, OP_ADD },
         { SUBTRACTION, OP_SUBTRACT },
@@ -21,7 +23,7 @@ Token Compiler::next() {
 }
 
 Bytecode Compiler::parse() {
-    declarations();
+    statements();
     consume(END_OF_STREAM);
     return code;
 }
@@ -84,7 +86,7 @@ void Compiler::declaration() {
     expression();
     consume(PERIOD);
 
-    emit(OP_ASSIGMENT);
+    emit(OP_DECLARATION);
     emit(code.add_constant(name));
 }
 
@@ -95,7 +97,7 @@ void Compiler::assigment() {
     expression();
     consume(PERIOD);
 
-    emit(OP_DECLARATION);
+    emit(OP_ASSIGMENT);
     emit(code.add_constant(name));
 }
 
@@ -121,17 +123,16 @@ bool Compiler::is_binary_operator(TokenType type) {
 void Compiler::block() {
     consume(BLOCK_START);
     emit(OP_ENSCOPE);
-    declarations();
+    statements();
     emit(OP_DESCOPE);
     consume(BLOCK_END);
-
 }
 
 bool Compiler::check(TokenType next) {
     return peek() == next;
 }
 
-void Compiler::declarations() {
+void Compiler::statements() {
     while (!check(END_OF_STREAM)) {
         switch (peek()) {
             case LET:
@@ -146,6 +147,9 @@ void Compiler::declarations() {
             case IF:
                 conditional();
                 break;
+            case WHILE:
+                loop();
+                break;
             default:
                 return;
         }
@@ -156,30 +160,63 @@ void Compiler::conditional() {
     consume(IF);
     expression();
     consume(COLON);
-    auto location = jump(OP_JUMP_IF_FALSE);
+    auto falsey = jump(OP_JUMP_IF_FALSE);
     block();
-    patch(location);
+
+    size_t truthy;
+    if (check(OTHERWISE)) {
+        truthy = jump(OP_JUMP);
+    }
+
+    patch(falsey);
 
     if (check(OTHERWISE)) {
         otherwise();
+        patch(truthy);
     }
 }
 
 void Compiler::otherwise() {
     consume(OTHERWISE);
     consume(COLON);
-    auto location = jump(OP_JUMP);
     block();
-    patch(location);
 }
 
 size_t Compiler::jump(Byte instruction) {
     emit(instruction);
-    Byte placeholder = 0xff;
-    return emit(placeholder);
+    size_t location = emit(placeholder);
+    emit(placeholder);
+    return location;
 }
 
 void Compiler::patch(size_t location) {
-    size_t offset = code.size() - location;
-    code.set(location, offset);
+    Short jump = here() - location - 2;
+    Byte left = jump >> 8 & 0xff;
+    Byte right = jump & 0xff;
+    code.set(location, left);
+    code.set(location + 1, right);
+}
+
+void Compiler::loop() {
+    consume(WHILE);
+    auto start = here();
+    expression();
+    consume(COLON);
+    auto skip = jump(OP_JUMP_IF_FALSE);
+    block();
+    jump(OP_JUMP, start);
+    patch(skip);
+}
+
+void Compiler::jump(Byte instruction, Byte location) {
+    emit(instruction);
+    Short jump = location - here() - 2;
+    Byte left = (jump >> 8) & 0xff;
+    Byte right = jump & 0xff;
+    emit(left);
+    emit(right);
+}
+
+size_t Compiler::here() {
+    return code.size();
 }

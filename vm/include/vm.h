@@ -16,6 +16,7 @@ class VM {
     Byte next();
     void push(const Value& value);
     Value pop();
+    Short next_short();
 
     void enscope();
     void descope();

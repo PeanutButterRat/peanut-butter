@@ -27,7 +27,7 @@ void Scope::assign(const std::string &identifier, const Value &value) {
     if (it != variables.end()) {
         it->second = value;
     } else if (shallower) {
-        shallower->resolve(identifier);
+        shallower->assign(identifier, value);
     } else {
         throw ScopeException(identifier + " is undefined.");
     }

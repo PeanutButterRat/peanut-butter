@@ -3,8 +3,10 @@
 
 int main() {
     std::string source = "let a be 5.\n"
-                         "\tlet a be 6.\n"
-                         "let b be 4.";
+                         "if a:\n"
+                         "\tlet b be 3.\n"
+                         "otherwise:\n"
+                         "\tlet c be 4.";
     Scanner scanner{source};
     std::vector<Token> tokens = scanner.tokenize();
 

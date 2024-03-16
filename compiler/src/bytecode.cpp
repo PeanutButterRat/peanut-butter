@@ -76,6 +76,12 @@ void Bytecode::disassemble() const {
                 cout << "ASSIGMENT [identifier: " << constants[index].string() << "]" << endl;
                 break;
             }
+            case OP_DECLARATION: {
+                size_t index = *(++it);
+                Value constant = constants[index];
+                cout << "DECLARATION [identifier: " << constants[index].string() << "]" << endl;
+                break;
+            }
             case OP_IDENTIFIER: {
                 size_t index = *(++it);
                 Value constant = constants[index];
@@ -91,12 +97,16 @@ void Bytecode::disassemble() const {
                 break;
             }
             case OP_JUMP_IF_FALSE: {
-                size_t offset = *(++it);
+                Short offset = 0;
+                offset |= *(++it) << 8;
+                offset |= *(++it);
                 cout << "JUMP IF FALSE [offset: " << offset << "]" << endl;
                 break;
             }
             case OP_JUMP: {
-                size_t offset = *(++it);
+                Short offset = 0;
+                offset |= *(++it) << 8;
+                offset |= *(++it);
                 cout << "JUMP [offset: " << offset << "]" << endl;
                 break;
             }

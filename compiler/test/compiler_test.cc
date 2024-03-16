@@ -26,7 +26,7 @@ TEST(CompilerTests, ChainedBinaryExpression) {
                 OP_MULTIPLY,
                 OP_CONSTANT, 4,
                 OP_MODULO,
-                OP_ASSIGMENT, 5
+                OP_DECLARATION, 5
             },
             {5, 10, 3, 12, 6, "y"}
     };
@@ -49,20 +49,45 @@ TEST(CompilerTests, ControlFlowIfOtherwise) {
     Bytecode expected {
         {
                 OP_CONSTANT, 0,
-                OP_ASSIGMENT, 1,
+                OP_DECLARATION, 1,
                 OP_IDENTIFIER, 1,
-                OP_JUMP_IF_FALSE, 7,
+                OP_JUMP_IF_FALSE, 0, 9,
                 OP_ENSCOPE,
                 OP_CONSTANT, 2,
-                OP_ASSIGMENT, 3,
+                OP_DECLARATION, 3,
                 OP_DESCOPE,
-                OP_JUMP, 7,
+                OP_JUMP, 0, 6,
                 OP_ENSCOPE,
                 OP_CONSTANT, 4,
-                OP_ASSIGMENT, 5,
+                OP_DECLARATION, 5,
                 OP_DESCOPE
             },
             {5, "a", 3, "b", 4, "c"}
+    };
+    auto actual = compile(source);
+
+    ASSERT_EQ(expected, actual);
+}
+
+TEST(CompilerTests, WhileLoop) {
+    std::string source = "let a be 5.\n"
+                         "while a:\n"
+                         "\tset a to a minus 1.";
+    Bytecode expected {
+        {
+                OP_CONSTANT, 0,
+                OP_DECLARATION, 1,
+                OP_IDENTIFIER, 1,
+                OP_JUMP_IF_FALSE, 0, 12,
+                OP_ENSCOPE,
+                OP_IDENTIFIER, 1,
+                OP_CONSTANT, 2,
+                OP_SUBTRACT,
+                OP_ASSIGMENT, 1,
+                OP_DESCOPE,
+                OP_JUMP, 255, 0b11101111
+            },
+            {5, "a", 1}
     };
     auto actual = compile(source);
 

@@ -7,6 +7,7 @@
 #include "value.h"
 
 typedef uint8_t Byte;
+typedef int16_t Short;
 
 enum Opcode {
     OP_ADD,
@@ -32,7 +33,7 @@ public:
     std::vector<Byte> bytes;
 
     size_t add_constant(const Value& constant);
-    size_t size() const;
+    [[nodiscard]] size_t size() const;
     Value get_constant(size_t index);
     void add(Byte byte);
     void set(size_t index, Byte byte);

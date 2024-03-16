@@ -15,7 +15,7 @@ class Compiler {
     size_t emit(Byte byte);
     Token next();
     Token consume(TokenType type);
-    TokenType peek() const;
+    [[nodiscard]] TokenType peek() const;
     bool check(TokenType next);
     void expression();
     void value();
@@ -26,11 +26,14 @@ class Compiler {
     void assigment();
     void boolean();
     void block();
-    void declarations();
+    void statements();
     void conditional();
     void otherwise();
     size_t jump(Byte instruction);
+    void jump(Byte instruction, Byte location);
+    size_t here();
     void patch(size_t jump);
+    void loop();
 
     static bool is_binary_operator(TokenType type);
 
