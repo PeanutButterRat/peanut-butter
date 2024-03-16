@@ -128,24 +128,28 @@ Value operator+(const Value &a, const Value &b) {
 Value operator-(const Value &a, const Value &b) {
     SAME_TYPE_GUARD(a, b, "subtraction");
     BAD_TYPE_GUARD(a, BOOLEAN, "subtraction");
+    BAD_TYPE_GUARD(a, STRING, "subtraction");
     BINARY_OPERATION(a, b, -);
 }
 
 Value operator*(const Value &a, const Value &b) {
     SAME_TYPE_GUARD(a, b, "multiplication");
     BAD_TYPE_GUARD(a, BOOLEAN, "multiplication");
+    BAD_TYPE_GUARD(a, STRING, "multiplication");
     BINARY_OPERATION(a, b, *);
 }
 
 Value operator/(const Value &a, const Value &b) {
     SAME_TYPE_GUARD(a, b, "division");
     BAD_TYPE_GUARD(a, BOOLEAN, "division");
+    BAD_TYPE_GUARD(a, STRING, "division");
     BINARY_OPERATION(a, b, /);
 }
 
 Value operator%(const Value &a, const Value &b) {
     SAME_TYPE_GUARD(a, b, "modulo");
     BAD_TYPE_GUARD(a, BOOLEAN, "modulo");
+    BAD_TYPE_GUARD(a, STRING, "modulo");
     BINARY_OPERATION(a, b, %);
 }
 
