@@ -16,46 +16,40 @@
 
 Value::Value(Integer number) {
     type = INTEGER;
-    ref = new Integer;
-    *static_cast<Integer*>(ref) = number;
+    as.integer = number;
 }
 
 Value::Value(String string) {
     type = STRING;
-    ref = new String;
-    *static_cast<String*>(ref) = std::move(string);
+    as.string = new String;
+    *as.string = std::move(string);
 }
-
 
 Value::Value(const char *string) {
     type = STRING;
-    ref = new String;
-    *static_cast<String*>(ref) = std::move(String(string));
+    as.string = new String;
+    *as.string = string;
 }
-
 
 Value::Value(Boolean boolean) {
     type = BOOLEAN;
-    ref = new Boolean;
-    *static_cast<Boolean*>(ref) = boolean;
+    as.boolean = boolean;
 }
 
 Value::Value(const Value &other) {
     switch (other.type) {
         case INTEGER:
             type = INTEGER;
-            ref = new Integer;
-            *static_cast<Integer*>(ref) = other.integer();
+            as.integer = other.as.integer;
             break;
         case BOOLEAN:
             type = BOOLEAN;
-            ref = new Boolean;
-            *static_cast<Boolean*>(ref) = other.boolean();
+            as.boolean = other.as.boolean;
             break;
         default:
             type = STRING;
-            ref = new String;
-            *static_cast<String*>(ref) = other.string();
+            as.string = new String;
+            *as.string = other.string();
             break;
     }
 }
@@ -65,7 +59,7 @@ Integer Value::integer() const {
         throw BadCastException(*this, "Integer");
     }
 
-    return *static_cast<Integer*>(ref);
+    return as.integer;
 }
 
 String Value::string() const {
@@ -73,7 +67,7 @@ String Value::string() const {
         throw BadCastException(*this, "Integer");
     }
 
-    return *static_cast<String*>(ref);
+    return *as.string;
 }
 
 Boolean Value::boolean() const {
@@ -81,7 +75,7 @@ Boolean Value::boolean() const {
         throw BadCastException(*this, "Integer");
     }
 
-    return *static_cast<Boolean*>(ref);
+    return as.boolean;
 }
 
 
@@ -167,25 +161,12 @@ String Value::get_type_string() const {
 }
 
 Value::~Value() {
-    if (ref) {
-        switch (type) {
-            case INTEGER:
-                 delete static_cast<Integer*>(ref);
-                 break;
-            case BOOLEAN:
-                delete static_cast<Boolean*>(ref);
-                break;
-            default:
-                delete static_cast<String*>(ref);
-                break;
-        }
+    if (type == STRING && as.string != nullptr) {
+        delete as.string;
     }
 }
 
 bool Value::truthy() const {
-    if (!ref) {
-        return false;
-    }
     switch (type) {
         case INTEGER:
             return integer() != 0;
