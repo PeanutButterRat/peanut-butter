@@ -20,7 +20,6 @@ add_library(
         vm/include/vm.h
 )
 
-
 add_library(
         scope
         vm/src/scope.cpp
@@ -139,8 +138,20 @@ target_link_libraries(
         GTest::gtest_main
 )
 
+add_executable(
+        value_test
+        compiler/test/value_test.cc
+)
+
+target_link_libraries(
+        value_test
+        value
+        GTest::gtest_main
+)
+
 include(GoogleTest)
 gtest_discover_tests(scanner_test)
 gtest_discover_tests(compiler_test)
 gtest_discover_tests(vm_test)
 gtest_discover_tests(scope_test)
+gtest_discover_tests(value_test)
