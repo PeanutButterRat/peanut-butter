@@ -39,6 +39,7 @@ public:
     void add(Byte byte);
     void set(size_t index, Byte byte);
     void serialize(std::ofstream& outfile);
+    static Bytecode deserialize(std::ifstream& infile);
 
     Bytecode() = default;
     Bytecode(std::vector<Byte> bytes, std::vector<Value> constants);

@@ -149,9 +149,25 @@ target_link_libraries(
         GTest::gtest_main
 )
 
+add_executable(
+        bytecode_test
+        compiler/test/bytecode_test.cc
+)
+
+target_link_libraries(
+        bytecode_test
+        value
+        scanner
+        compiler
+        token
+        bytecode
+        GTest::gtest_main
+)
+
 include(GoogleTest)
 gtest_discover_tests(scanner_test)
 gtest_discover_tests(compiler_test)
 gtest_discover_tests(vm_test)
 gtest_discover_tests(scope_test)
 gtest_discover_tests(value_test)
+gtest_discover_tests(bytecode_test)

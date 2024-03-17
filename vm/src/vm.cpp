@@ -2,20 +2,20 @@
 
 #include "../include/vm.h"
 
-VM::VM(Bytecode* code) {
+VM::VM(Bytecode code) {
     this->scope = new Scope;
     this->code = code;
     pc = 0;
 }
 
 void VM::run() {
-    while (pc < code->bytes.size()) {
+    while (pc < code.bytes.size()) {
         Byte opcode = next();
 
         switch (opcode) {
             case OP_CONSTANT: {
                 auto index = next();
-                push(code->get_constant(index));
+                push(code.get_constant(index));
                 break;
             }
             case OP_MODULO: {
@@ -54,19 +54,19 @@ void VM::run() {
             }
             case OP_DECLARATION: {
                 auto index = next();
-                std::string identifier =  code->get_constant(index).string();
+                std::string identifier =  code.get_constant(index).string();
                 scope->define(identifier, pop());
                 break;
             }
             case OP_ASSIGMENT: {
                 auto index = next();
-                std::string identifier =  code->get_constant(index).string();
+                std::string identifier =  code.get_constant(index).string();
                 scope->assign(identifier, pop());
                 break;
             }
             case OP_IDENTIFIER: {
                 auto index = next();
-                std::string identifier =  code->get_constant(index).string();
+                std::string identifier =  code.get_constant(index).string();
                 push(scope->resolve(identifier));
                 break;
             }
@@ -97,7 +97,7 @@ void VM::run() {
 }
 
 Byte VM::next() {
-    return code->bytes[pc++];
+    return code.bytes[pc++];
 }
 
 Value VM::pop() {

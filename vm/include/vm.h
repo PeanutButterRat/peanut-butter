@@ -10,7 +10,7 @@
 class VM {
     std::stack<Value> stack;
     Scope* scope;
-    Bytecode* code;
+    Bytecode code;
     size_t pc;
 
     Byte next();
@@ -22,7 +22,7 @@ class VM {
     void descope();
 
 public:
-    explicit VM(Bytecode* code);
+    explicit VM(Bytecode code);
     void run();
 };
 

@@ -1,28 +1,41 @@
+#include <iostream>
+#include <fstream>
+#include <filesystem>
+
 #include "../include/vm.h"
 
-int main() {
-    // let y be 5 plus 10 minus 3 times 12 mod 6.
-    Bytecode code {
-            {
-                OP_CONSTANT, 0,
-                OP_DECLARATION, 1,
-                OP_IDENTIFIER, 1,
-                OP_JUMP_IF_FALSE, 0, 12,
-                OP_ENSCOPE,
-                OP_IDENTIFIER, 1,
-                OP_CONSTANT, 2,
-                OP_SUBTRACT,
-                OP_ASSIGMENT, 1,
-                OP_DESCOPE,
-                OP_JUMP, 255, 0b11101111,
-                OP_IDENTIFIER, 1,
-                OP_PRINT,
-            },
-            {5, "a", 1}
-    };
+namespace fs = std::filesystem;
 
-    VM test{&code};
-    test.run();
+int main(int argc, char* argv[]) {
+    if (argc != 2) {
+        std::cout << "Usage: pbpl <filename>" << std::endl;
+        return 1;
+    }
+
+    fs::path infilepath = argv[1];
+    if (infilepath.extension() != ".nut") {
+        std::cout << "Error: filename must have '.nut' file extension." << std::endl;
+        return 2;
+    } else if (!fs::exists(infilepath)) {
+        std::cout << "Error: " << infilepath << " does not exist." << std::endl;
+        return 3;
+    }
+
+    std::ifstream infile{infilepath};
+    if (!infile.is_open()) {
+        std::cout << "Error: could not open input file " << infilepath << "." << std::endl;
+        return 4;
+    }
+
+    try {
+        auto code = Bytecode::deserialize(infile);
+        infile.close();
+        VM machine{code};
+    } catch (const std::exception& error) {
+        std::cout << "Error: " << error.what() << std::endl;
+        infile.close();
+        return -1;
+    }
 
     return 0;
 }

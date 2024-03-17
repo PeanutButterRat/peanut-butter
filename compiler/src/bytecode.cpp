@@ -115,14 +115,14 @@ void Bytecode::serialize(std::ofstream& outfile) {
                 Short offset = 0;
                 offset |= *(++it) << 8;
                 offset |= *(++it);
-                outfile << setw(iwidth) << "JUMP_IF_FALSE" << setw(argwidth) << ' ' << " -> " << (int) offset << endl;
+                outfile << setw(iwidth) << "JUMP_IF_FALSE" << setw(argwidth) << (int) offset << endl;
                 break;
             }
             case OP_JUMP: {
                 Short offset = 0;
                 offset |= *(++it) << 8;
                 offset |= *(++it);
-                outfile << setw(iwidth) << "JUMP" << setw(argwidth) << ' ' << " -> " << (int) offset << endl;
+                outfile << setw(iwidth) << "JUMP" << setw(argwidth) << (int) offset << endl;
                 break;
             }
             default:
@@ -139,4 +139,107 @@ void Bytecode::serialize(std::ofstream& outfile) {
         }
     }
 }
+
+std::vector<std::string> split(const std::string& line) {
+    size_t start = line.size();
+    std::vector<std::string> words{};
+
+    for (size_t index = 0; index < line.size(); index++) {
+        auto character = line[index];
+
+        if (!isspace(character) && start >= line.size()) {
+            start = index;
+        } else if (isspace(character) && start < line.size()) {
+            auto length = index - start;
+            words.emplace_back(line.substr(start, length));
+            start = line.size();
+        }
+    }
+
+    if (start < line.size()) {
+        words.emplace_back(line.substr(start, line.size()));
+    }
+
+    return words;
+}
+
+Bytecode Bytecode::deserialize(std::ifstream &infile) {
+    Bytecode code{};
+    std::string line;
+
+    while (getline(infile, line) && line.find("CONSTANTS:") != 0) {
+        auto symbols = split(line);
+        if (symbols.empty()) {
+            continue;
+        }
+
+        auto opcode = symbols[0];
+
+        if (opcode == "ADD") {
+            code.add(OP_ADD);
+        } else if (opcode == "SUBTRACT") {
+            code.add(OP_SUBTRACT);
+        } else if (opcode == "MULTIPLY") {
+            code.add(OP_MULTIPLY);
+        } else if (opcode == "DIVIDE") {
+            code.add(OP_DIVIDE);
+        } else if (opcode == "CONSTANT") {
+            code.add(OP_CONSTANT);
+            code.add(std::stoi(symbols[1]));
+        } else if (opcode == "MOD") {
+            code.add(OP_MODULO);
+        } else if (opcode == "PRINT") {
+            code.add(OP_PRINT);
+        } else if (opcode == "ASSIGMENT") {
+            code.add(OP_ASSIGMENT);
+            code.add(std::stoi(symbols[1]));
+        } else if (opcode == "DECLARATION") {
+            code.add(OP_DECLARATION);
+            code.add(std::stoi(symbols[1]));
+        } else if (opcode == "IDENTIFIER") {
+            code.add(OP_IDENTIFIER);
+            code.add(std::stoi(symbols[1]));
+        } else if (opcode == "ENSCOPE") {
+            code.add(OP_ENSCOPE);
+        } else if (opcode == "DESCOPE") {
+            code.add(OP_DESCOPE);
+        } else if (opcode == "JUMP_IF_FALSE") {
+            code.add(OP_JUMP_IF_FALSE);
+            auto offset = (Short) std::stoi(symbols[1]);
+            Byte left = (offset >> 8) & 0xff;
+            Byte right = offset & 0xff;
+            code.add(left);
+            code.add(right);
+        } else if (opcode == "JUMP") {
+            code.add(OP_JUMP);
+            auto offset = (Short) std::stoi(symbols[1]);
+            Byte left = (offset >> 8) & 0xff;
+            Byte right = offset & 0xff;
+            code.add(left);
+            code.add(right);
+        }
+    }
+
+    while (getline(infile, line)) {
+        auto symbol = split(line);
+        if (symbol.empty()) {
+            continue;
+        }
+
+        auto string = symbol[0];
+        if (string[0] == '"') {
+            string = string.substr(1, string.length() - 2);
+            code.add_constant(Value(string));
+        } else if (string == "true") {
+            code.add_constant(true);
+        } else if (string == "false") {
+            code.add_constant(false);
+        } else {
+            code.add_constant(std::stoi(string));
+        }
+    }
+
+    return code;
+}
+
 

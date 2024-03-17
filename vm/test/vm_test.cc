@@ -11,7 +11,7 @@ TEST(VirtualMachineTests, IntegerAddStringException) {
             },
             {5, "Hello"}
     };
-    VM vm{&code};
+    VM vm{code};
 
     EXPECT_THROW(vm.run(), InvalidOperationException);
 }
@@ -25,7 +25,7 @@ TEST(VirtualMachineTests, IntegerAddBooleanException) {
             },
             {5, Value(false)}
     };
-    VM vm{&code};
+    VM vm{code};
 
     EXPECT_THROW(vm.run(), InvalidOperationException);
 }
@@ -39,7 +39,7 @@ TEST(VirtualMachineTests, BooleanAddStringException) {
             },
             {Value(false), "Hello"}
     };
-    VM vm{&code};
+    VM vm{code};
 
     EXPECT_THROW(vm.run(), InvalidOperationException);
 }
@@ -53,7 +53,7 @@ TEST(VirtualMachineTests, BooleansCannotAdd) {
             },
             {Value(false), Value(true)}
     };
-    VM vm{&code};
+    VM vm{code};
 
     EXPECT_THROW(vm.run(), InvalidOperationException);
 }
