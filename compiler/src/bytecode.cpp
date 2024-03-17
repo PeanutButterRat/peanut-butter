@@ -2,8 +2,26 @@
 #include <fstream>
 #include <iostream>
 #include <iomanip>
+#include <unordered_map>
 
 #include "../include/bytecode.h"
+
+std::unordered_map<std::string, Opcode> opcodes {
+        {"ADD",           OP_ADD},
+        {"SUBTRACT",      OP_SUBTRACT},
+        {"MULTIPLY",      OP_MULTIPLY},
+        {"DIVIDE",        OP_DIVIDE},
+        {"CONSTANT",      OP_CONSTANT},
+        {"MODULO",        OP_MODULO},
+        {"PRINT",         OP_PRINT},
+        {"ASSIGMENT",     OP_ASSIGMENT},
+        {"DECLARATION",   OP_DECLARATION},
+        {"IDENTIFIER",    OP_IDENTIFIER},
+        {"ENSCOPE",       OP_PUSH_SCOPE},
+        {"DESCOPE",       OP_POP_SCOPE},
+        {"JUMP_IF_FALSE", OP_JUMP_IF_FALSE},
+        {"JUMP",          OP_JUMP},
+};
 
 bool operator==(const Bytecode &a, const Bytecode &b) {
     return a.bytes == b.bytes && a.constants == b.constants;
@@ -22,7 +40,7 @@ Value Bytecode::get_constant(size_t index) {
     return constants[index];
 }
 
-size_t Bytecode::add_constant(const Value& constant) {
+size_t Bytecode::add_constant(const Value &constant) {
     for (size_t i = 0; i < constants.size(); i++) {
         if (constants[i] == constant) {
             return i;
@@ -44,7 +62,7 @@ void Bytecode::set(size_t index, Byte byte) {
     bytes[index] = byte;
 }
 
-void Bytecode::serialize(std::ofstream& outfile) {
+void Bytecode::serialize(std::ofstream &outfile) {
     using std::endl, std::setw, std::left, std::right;
 
     outfile << "MAIN:" << endl;
@@ -78,7 +96,7 @@ void Bytecode::serialize(std::ofstream& outfile) {
                 break;
             }
             case OP_MODULO: {
-                outfile << setw(iwidth) << "MOD" << endl;
+                outfile << setw(iwidth) << "MODULO" << endl;
                 break;
             }
             case OP_PRINT: {
@@ -94,20 +112,22 @@ void Bytecode::serialize(std::ofstream& outfile) {
             case OP_DECLARATION: {
                 size_t index = *(++it);
                 Value constant = constants[index];
-                outfile << setw(iwidth) << "DECLARATION" << setw(argwidth) << index << " -> " << constants[index].string() << endl;
+                outfile << setw(iwidth) << "DECLARATION" << setw(argwidth) << index << " -> "
+                        << constants[index].string() << endl;
                 break;
             }
             case OP_IDENTIFIER: {
                 size_t index = *(++it);
                 Value constant = constants[index];
-                outfile << setw(iwidth) << "IDENTIFIER" << setw(argwidth) << index << " -> " << constants[index].string() << endl;
+                outfile << setw(iwidth) << "IDENTIFIER" << setw(argwidth) << index << " -> "
+                        << constants[index].string() << endl;
                 break;
             }
-            case OP_ENSCOPE: {
+            case OP_PUSH_SCOPE: {
                 outfile << setw(iwidth) << "ENSCOPE" << endl;
                 break;
             }
-            case OP_DESCOPE: {
+            case OP_POP_SCOPE: {
                 outfile << setw(iwidth) << "DESCOPE" << endl;
                 break;
             }
@@ -131,7 +151,7 @@ void Bytecode::serialize(std::ofstream& outfile) {
     }
 
     outfile << "\nCONSTANTS:" << endl;
-    for (const auto& constant : constants) {
+    for (const auto &constant: constants) {
         if (constant.type == STRING) {
             outfile << '\t' << '"' << constant << '"' << endl;
         } else {
@@ -140,7 +160,7 @@ void Bytecode::serialize(std::ofstream& outfile) {
     }
 }
 
-std::vector<std::string> split(const std::string& line) {
+std::vector<std::string> split(const std::string &line) {
     size_t start = line.size();
     std::vector<std::string> words{};
 
@@ -173,50 +193,27 @@ Bytecode Bytecode::deserialize(std::ifstream &infile) {
             continue;
         }
 
-        auto opcode = symbols[0];
+        if (opcodes.find(symbols[0]) != opcodes.end()) {
+            auto opcode = opcodes[symbols[0]];
+            code.add(opcode);
 
-        if (opcode == "ADD") {
-            code.add(OP_ADD);
-        } else if (opcode == "SUBTRACT") {
-            code.add(OP_SUBTRACT);
-        } else if (opcode == "MULTIPLY") {
-            code.add(OP_MULTIPLY);
-        } else if (opcode == "DIVIDE") {
-            code.add(OP_DIVIDE);
-        } else if (opcode == "CONSTANT") {
-            code.add(OP_CONSTANT);
-            code.add(std::stoi(symbols[1]));
-        } else if (opcode == "MOD") {
-            code.add(OP_MODULO);
-        } else if (opcode == "PRINT") {
-            code.add(OP_PRINT);
-        } else if (opcode == "ASSIGMENT") {
-            code.add(OP_ASSIGMENT);
-            code.add(std::stoi(symbols[1]));
-        } else if (opcode == "DECLARATION") {
-            code.add(OP_DECLARATION);
-            code.add(std::stoi(symbols[1]));
-        } else if (opcode == "IDENTIFIER") {
-            code.add(OP_IDENTIFIER);
-            code.add(std::stoi(symbols[1]));
-        } else if (opcode == "ENSCOPE") {
-            code.add(OP_ENSCOPE);
-        } else if (opcode == "DESCOPE") {
-            code.add(OP_DESCOPE);
-        } else if (opcode == "JUMP_IF_FALSE") {
-            code.add(OP_JUMP_IF_FALSE);
-            auto offset = (Short) std::stoi(symbols[1]);
-            Byte left = (offset >> 8) & 0xff;
-            Byte right = offset & 0xff;
-            code.add(left);
-            code.add(right);
-        } else if (opcode == "JUMP") {
-            code.add(OP_JUMP);
-            auto offset = (Short) std::stoi(symbols[1]);
-            Byte left = (offset >> 8) & 0xff;
-            Byte right = offset & 0xff;
-            code.add(left);
-            code.add(right);
+            switch (opcode) {
+                case OP_CONSTANT:
+                case OP_ASSIGMENT:
+                case OP_DECLARATION:
+                case OP_IDENTIFIER:
+                    code.add(std::stoi(symbols[1]));
+                    break;
+                case OP_JUMP_IF_FALSE:
+                case OP_JUMP: {
+                    auto offset = (Short) std::stoi(symbols[1]);
+                    Byte left = (offset >> 8) & 0xff;
+                    Byte right = offset & 0xff;
+                    code.add(left);
+                    code.add(right);
+                    break;
+                }
+            }
         }
     }
 
@@ -241,5 +238,3 @@ Bytecode Bytecode::deserialize(std::ifstream &infile) {
 
     return code;
 }
-
-

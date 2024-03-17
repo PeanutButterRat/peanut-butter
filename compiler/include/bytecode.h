@@ -21,8 +21,8 @@ enum Opcode {
     OP_DECLARATION,
     OP_ASSIGMENT,
     OP_IDENTIFIER,
-    OP_ENSCOPE,
-    OP_DESCOPE,
+    OP_PUSH_SCOPE,
+    OP_POP_SCOPE,
     OP_JUMP_IF_FALSE,
     OP_JUMP,
 };

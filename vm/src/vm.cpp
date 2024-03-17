@@ -70,12 +70,12 @@ void VM::run() {
                 push(scope->resolve(identifier));
                 break;
             }
-            case OP_ENSCOPE: {
-                enscope();
+            case OP_PUSH_SCOPE: {
+                push_scope();
                 break;
             }
-            case OP_DESCOPE: {
-                descope();
+            case OP_POP_SCOPE: {
+                pop_scope();
                 break;
             }
             case OP_JUMP_IF_FALSE: {
@@ -110,11 +110,11 @@ void VM::push(const Value& value) {
     stack.push(value);
 }
 
-void VM::enscope() {
+void VM::push_scope() {
     scope = scope->push();
 }
 
-void VM::descope() {
+void VM::pop_scope() {
     auto shallower = scope->pop();
     if (!shallower) {
         throw RuntimeException("Attempted to remove global scope.");

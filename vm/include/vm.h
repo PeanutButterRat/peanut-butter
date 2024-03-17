@@ -17,9 +17,8 @@ class VM {
     void push(const Value& value);
     Value pop();
     Short next_short();
-
-    void enscope();
-    void descope();
+    void push_scope();
+    void pop_scope();
 
 public:
     explicit VM(Bytecode code);

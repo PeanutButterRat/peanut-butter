@@ -51,4 +51,4 @@ struct Token {
     static std::string get_type_string(TokenType type);
 };
 
-#endif //CPBPL_TOKEN_H
+#endif // CPBPL_TOKEN_H

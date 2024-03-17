@@ -52,15 +52,15 @@ TEST(CompilerTests, ControlFlowIfOtherwise) {
                 OP_DECLARATION, 1,
                 OP_IDENTIFIER, 1,
                 OP_JUMP_IF_FALSE, 0, 9,
-                OP_ENSCOPE,
+                OP_PUSH_SCOPE,
                 OP_CONSTANT, 2,
                 OP_DECLARATION, 3,
-                OP_DESCOPE,
+                OP_POP_SCOPE,
                 OP_JUMP, 0, 6,
-                OP_ENSCOPE,
+                OP_PUSH_SCOPE,
                 OP_CONSTANT, 4,
                 OP_DECLARATION, 5,
-                OP_DESCOPE
+                OP_POP_SCOPE
             },
             {5, "a", 3, "b", 4, "c"}
     };
@@ -79,12 +79,12 @@ TEST(CompilerTests, WhileLoop) {
                 OP_DECLARATION, 1,
                 OP_IDENTIFIER, 1,
                 OP_JUMP_IF_FALSE, 0, 12,
-                OP_ENSCOPE,
+                OP_PUSH_SCOPE,
                 OP_IDENTIFIER, 1,
                 OP_CONSTANT, 2,
                 OP_SUBTRACT,
                 OP_ASSIGMENT, 1,
-                OP_DESCOPE,
+                OP_POP_SCOPE,
                 OP_JUMP, 255, 0b11101111
             },
             {5, "a", 1}

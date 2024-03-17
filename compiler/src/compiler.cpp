@@ -101,7 +101,6 @@ void Compiler::assigment() {
     emit(code.add_constant(name));
 }
 
-
 void Compiler::boolean() {
     Boolean boolean = next().lexeme != "false";
     emit(OP_CONSTANT);
@@ -122,9 +121,9 @@ bool Compiler::is_binary_operator(TokenType type) {
 
 void Compiler::block() {
     consume(BLOCK_START);
-    emit(OP_ENSCOPE);
+    emit(OP_PUSH_SCOPE);
     statements();
-    emit(OP_DESCOPE);
+    emit(OP_POP_SCOPE);
     consume(BLOCK_END);
 }
 
