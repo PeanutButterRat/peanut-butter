@@ -35,6 +35,7 @@ class Compiler {
     size_t here();
     void patch(size_t jump);
     void loop();
+    void function();
 
     static bool is_binary_operator(TokenType type);
 

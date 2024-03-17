@@ -220,3 +220,7 @@ void Compiler::jump(Byte instruction, Byte location) {
 size_t Compiler::here() {
     return code.size();
 }
+
+void Compiler::function() {
+    
+}

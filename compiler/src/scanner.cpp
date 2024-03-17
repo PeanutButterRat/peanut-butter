@@ -5,27 +5,28 @@
 
 #include "../include/scanner.h"
 
-const std::unordered_map<std::string, TokenType> keywords {
-        { "define", DEFINE },
-        { "as", AS },
-        { "set", SET },
-        { "let", LET },
-        { "be", BE },
-        { "to", TO },
-        { "or", OR },
-        { "if", IF },
-        { "and", AND },
-        { "true", TRUE },
-        { "false", FALSE },
-        { "otherwise", OTHERWISE },
-        { "times", MULTIPLICATION},
-        { "minus", SUBTRACTION },
-        { "plus", ADDITION },
-        { "over", DIVISION },
-        { "with", WITH },
-        { "return", RETURN },
-        { "mod", MODULO },
-        { "while", WHILE },
+const std::unordered_map<std::string, TokenType> keywords{
+        {"define",    DEFINE},
+        {"as",        AS},
+        {"set",       SET},
+        {"let",       LET},
+        {"be",        BE},
+        {"to",        TO},
+        {"or",        OR},
+        {"if",        IF},
+        {"and",       AND},
+        {"true",      TRUE},
+        {"false",     FALSE},
+        {"otherwise", OTHERWISE},
+        {"times",     MULTIPLICATION},
+        {"minus",     SUBTRACTION},
+        {"plus",      ADDITION},
+        {"over",      DIVISION},
+        {"with",      WITH},
+        {"return",    RETURN},
+        {"mod",       MODULO},
+        {"while",     WHILE},
+        {"of",        OF}
 };
 
 std::vector<Token> Scanner::tokenize() {
@@ -180,5 +181,6 @@ void Scanner::comma() {
 }
 
 std::ostream &operator<<(std::ostream &os, const Token &token) {
-    return os << "Token: { Type: " << token.get_type_string() << ", Lexeme: '" << token.lexeme << "', Line: " << token.line << " }";
+    return os << "Token: { Type: " << token.get_type_string() << ", Lexeme: '" << token.lexeme << "', Line: "
+              << token.line << " }";
 }
