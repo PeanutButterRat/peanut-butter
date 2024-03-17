@@ -3,6 +3,7 @@
 
 #include <cstdint>
 #include <vector>
+#include <string>
 
 #include "value.h"
 
@@ -37,12 +38,23 @@ public:
     Value get_constant(size_t index);
     void add(Byte byte);
     void set(size_t index, Byte byte);
-    void disassemble() const;
+    void serialize(std::ofstream& outfile);
 
     Bytecode() = default;
     Bytecode(std::vector<Byte> bytes, std::vector<Value> constants);
     friend bool operator== (const Bytecode& a, const Bytecode& b);
     friend bool operator!= (const Bytecode& a, const Bytecode& b);
+};
+
+class SerializationException : std::exception {
+    std::string reason;
+
+public:
+    SerializationException(int opcode) {
+        reason = "Unknown opcode encountered during serialization (" + std::to_string(opcode) + ")";
+    }
+
+    const char * what() const noexcept override { return reason.c_str(); }
 };
 
 #endif // CPBPL_BYTECODE_H

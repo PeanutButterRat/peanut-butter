@@ -2,6 +2,7 @@
 #define CPBPL_SCANNER_H
 
 #include <vector>
+#include <string>
 
 #include "token.h"
 

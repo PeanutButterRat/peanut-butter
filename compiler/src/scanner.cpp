@@ -1,4 +1,7 @@
-#include <bits/stdc++.h>
+#include <unordered_map>
+#include <stack>
+#include <utility>
+#include <algorithm>
 
 #include "../include/scanner.h"
 
