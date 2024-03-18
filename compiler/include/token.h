@@ -34,6 +34,10 @@ enum TokenType {
     WHILE,
     OF,
     PRINT,
+    IS,
+    GREATER,
+    LESS,
+    THAN,
     END_OF_STREAM
 };
 

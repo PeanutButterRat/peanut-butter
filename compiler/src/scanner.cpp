@@ -28,6 +28,10 @@ const std::unordered_map<std::string, TokenType> keywords{
         {"while",     WHILE},
         {"of",        OF},
         {"print",     PRINT},
+        {"is",        IS},
+        {"greater",   GREATER},
+        {"less",      LESS},
+        {"than",      THAN},
 };
 
 std::vector<Token> Scanner::tokenize() {
