@@ -6,7 +6,7 @@
 
 #include "../include/bytecode.h"
 
-std::unordered_map<std::string, Opcode> opcodes {
+std::unordered_map<std::string, Opcode> opcodes{
         {"ADD",           OP_ADD},
         {"SUBTRACT",      OP_SUBTRACT},
         {"MULTIPLY",      OP_MULTIPLY},
@@ -17,8 +17,8 @@ std::unordered_map<std::string, Opcode> opcodes {
         {"ASSIGMENT",     OP_ASSIGMENT},
         {"DECLARATION",   OP_DECLARATION},
         {"IDENTIFIER",    OP_IDENTIFIER},
-        {"ENSCOPE",       OP_PUSH_SCOPE},
-        {"DESCOPE",       OP_POP_SCOPE},
+        {"PUSH_SCOPE",    OP_PUSH_SCOPE},
+        {"POP_SCOPE",     OP_POP_SCOPE},
         {"JUMP_IF_FALSE", OP_JUMP_IF_FALSE},
         {"JUMP",          OP_JUMP},
 };
@@ -124,11 +124,11 @@ void Bytecode::serialize(std::ofstream &outfile) {
                 break;
             }
             case OP_PUSH_SCOPE: {
-                outfile << setw(iwidth) << "ENSCOPE" << endl;
+                outfile << setw(iwidth) << "PUSH_SCOPE" << endl;
                 break;
             }
             case OP_POP_SCOPE: {
-                outfile << setw(iwidth) << "DESCOPE" << endl;
+                outfile << setw(iwidth) << "POP_SCOPE" << endl;
                 break;
             }
             case OP_JUMP_IF_FALSE: {
