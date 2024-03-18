@@ -1,5 +1,3 @@
-#include <utility>
-
 #include "../include/value.h"
 
 #define SAME_TYPE_GUARD(a, b, op) if (a.type != b.type) throw InvalidOperationException(a, b, op)
@@ -10,8 +8,10 @@
             return a.string() op b.string(); \
         case BOOLEAN: \
             return a.boolean() op b.boolean(); \
-        default: \
+        case INTEGER: \
             return a.integer() op b.integer(); \
+        default: \
+            throw BadCastException(a, "Any"); \
 };
 
 Value::Value(Integer number) {
@@ -21,8 +21,7 @@ Value::Value(Integer number) {
 
 Value::Value(String string) {
     type = STRING;
-    as.string = new String;
-    *as.string = std::move(string);
+    as.string = new String(string);
 }
 
 Value::Value(const char *string) {
@@ -46,11 +45,12 @@ Value::Value(const Value &other) {
             type = BOOLEAN;
             as.boolean = other.as.boolean;
             break;
-        default:
+        case STRING:
             type = STRING;
-            as.string = new String;
-            *as.string = other.string();
+            as.string = new String(other.string());
             break;
+        default:
+            throw BadCastException(other, "Any");
     }
 }
 
@@ -64,7 +64,7 @@ Integer Value::integer() const {
 
 String Value::string() const {
     if (type != STRING) {
-        throw BadCastException(*this, "Integer");
+        throw BadCastException(*this, "String");
     }
 
     return *as.string;
@@ -72,13 +72,11 @@ String Value::string() const {
 
 Boolean Value::boolean() const {
     if (type != BOOLEAN) {
-        throw BadCastException(*this, "Integer");
+        throw BadCastException(*this, "Boolean");
     }
 
     return as.boolean;
 }
-
-
 
 std::ostream &operator<<(std::ostream &os, const Value &value) {
     switch (value.type) {
@@ -88,8 +86,10 @@ std::ostream &operator<<(std::ostream &os, const Value &value) {
             std::string string = value.boolean() ? "true" : "false";
             return os << string;
         }
-        default:
+        case STRING:
             return os << value.string();
+        default:
+            throw BadCastException(value, "Any");
     };
 }
 
@@ -159,13 +159,15 @@ String Value::get_type_string() const {
             return "Integer";
         case BOOLEAN:
             return "Boolean";
-        default:
+        case STRING:
             return "String";
+        default:
+            return "Unknown";
     }
 }
 
 Value::~Value() {
-    if (type == STRING && as.string != nullptr) {
+    if (type == STRING) {
         delete as.string;
     }
 }
@@ -176,8 +178,10 @@ bool Value::truthy() const {
             return integer() != 0;
         case BOOLEAN:
             return boolean();
-        default:
+        case STRING:
             return !string().empty();
+        default:
+            throw BadCastException(*this, "Any");
     }
 }
 
