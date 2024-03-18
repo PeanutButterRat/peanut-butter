@@ -33,6 +33,7 @@ enum TokenType {
     MODULO,
     WHILE,
     OF,
+    PRINT,
     END_OF_STREAM
 };
 

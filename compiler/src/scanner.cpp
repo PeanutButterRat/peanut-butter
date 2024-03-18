@@ -26,7 +26,8 @@ const std::unordered_map<std::string, TokenType> keywords{
         {"return",    RETURN},
         {"mod",       MODULO},
         {"while",     WHILE},
-        {"of",        OF}
+        {"of",        OF},
+        {"print",     PRINT},
 };
 
 std::vector<Token> Scanner::tokenize() {

@@ -149,6 +149,9 @@ void Compiler::statements() {
             case WHILE:
                 loop();
                 break;
+            case PRINT:
+                print();
+                break;
             default:
                 return;
         }
@@ -222,4 +225,11 @@ size_t Compiler::here() {
 
 void Compiler::function() {
     
+}
+
+void Compiler::print() {
+    consume(PRINT);
+    expression();
+    emit(OP_PRINT);
+    consume(PERIOD);
 }

@@ -31,6 +31,7 @@ int main(int argc, char* argv[]) {
         auto code = Bytecode::deserialize(infile);
         infile.close();
         VM machine{code};
+        machine.run();
     } catch (const std::exception& error) {
         std::cout << "Error: " << error.what() << std::endl;
         infile.close();
