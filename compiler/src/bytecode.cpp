@@ -67,97 +67,55 @@ void Bytecode::set(size_t index, Byte byte) {
 
 void Bytecode::serialize(std::ofstream &outfile) {
     using std::endl, std::setw, std::left, std::right;
+    const int iwidth = 15;
+    const int argwidth = 5;
 
     outfile << "MAIN:" << endl;
     for (auto it = bytes.begin(); it != bytes.end(); it++) {
         auto opcode = *it;
-        const int iwidth = 15;
-        const int argwidth = 5;
         outfile << left << '\t';
 
+        std::string key;
+        for (auto &i : opcodes) {
+            if (i.second == opcode) {
+                key = i.first;
+                break;
+            }
+        }
+        if (key.empty()) {
+            throw SerializationException(opcode);
+        }
+
         switch (opcode) {
-            case OP_ADD: {
-                outfile << setw(iwidth) << "ADD" << endl;
+            case OP_ADD:
+            case OP_SUBTRACT:
+            case OP_MULTIPLY:
+            case OP_DIVIDE:
+            case OP_MODULO:
+            case OP_EQUALITY:
+            case OP_GREATER_THAN:
+            case OP_LESS_THAN:
+            case OP_PRINT:
+            case OP_PUSH_SCOPE:
+            case OP_POP_SCOPE: {
+                outfile << setw(iwidth) << key << endl;
                 break;
             }
-            case OP_SUBTRACT: {
-                outfile << setw(iwidth) << "SUBTRACT" << endl;
-                break;
-            }
-            case OP_MULTIPLY: {
-                outfile << setw(iwidth) << "MULTIPLY" << endl;
-                break;
-            }
-            case OP_DIVIDE: {
-                outfile << setw(iwidth) << "DIVIDE" << endl;
-                break;
-            }
-            case OP_CONSTANT: {
-                size_t index = *(++it);
-                Value constant = constants[index];
-                outfile << setw(iwidth) << "CONSTANT" << setw(argwidth) << index << " -> " << constants[index] << endl;
-                break;
-            }
-            case OP_MODULO: {
-                outfile << setw(iwidth) << "MODULO" << endl;
-                break;
-            }
-            case OP_EQUALITY: {
-                outfile << setw(iwidth) << "EQUALITY" << endl;
-                break;
-            }
-            case OP_GREATER_THAN: {
-                outfile << setw(iwidth) << "GREATER_THAN" << endl;
-                break;
-            }
-            case OP_LESS_THAN: {
-                outfile << setw(iwidth) << "LESS_THAN" << endl;
-                break;
-            }
-            case OP_PRINT: {
-                outfile << setw(iwidth) << "PRINT" << endl;
-                break;
-            }
-            case OP_ASSIGMENT: {
-                size_t index = *(++it);
-                Value constant = constants[index];
-                outfile << setw(iwidth) << "ASSIGMENT" << setw(argwidth) << index << " -> " << constants[index] << endl;
-                break;
-            }
-            case OP_DECLARATION: {
-                size_t index = *(++it);
-                Value constant = constants[index];
-                outfile << setw(iwidth) << "DECLARATION" << setw(argwidth) << index << " -> "
-                        << constants[index].string() << endl;
-                break;
-            }
+            case OP_CONSTANT:
+            case OP_ASSIGMENT:
+            case OP_DECLARATION:
             case OP_IDENTIFIER: {
                 size_t index = *(++it);
                 Value constant = constants[index];
-                outfile << setw(iwidth) << "IDENTIFIER" << setw(argwidth) << index << " -> "
-                        << constants[index].string() << endl;
+                outfile << setw(iwidth) << key << setw(argwidth) << index << " -> " << constants[index] << endl;
                 break;
             }
-            case OP_PUSH_SCOPE: {
-                outfile << setw(iwidth) << "PUSH_SCOPE" << endl;
-                break;
-            }
-            case OP_POP_SCOPE: {
-                outfile << setw(iwidth) << "POP_SCOPE" << endl;
-                break;
-            }
-            case OP_JUMP_IF_FALSE: {
-                Short offset = 0;
-                offset |= *(++it) << 8;
-                offset |= *(++it);
-                outfile << setw(iwidth) << "JUMP_IF_FALSE" << setw(argwidth) << (int) offset << endl;
-                break;
-            }
+            case OP_JUMP_IF_FALSE:
             case OP_JUMP: {
                 Short offset = 0;
                 offset |= *(++it) << 8;
                 offset |= *(++it);
-                outfile << setw(iwidth) << "JUMP" << setw(argwidth) << (int) offset << endl;
+                outfile << setw(iwidth) << key << setw(argwidth) << (int) offset << endl;
                 break;
             }
             default:
