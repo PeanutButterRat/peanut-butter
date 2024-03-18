@@ -21,6 +21,9 @@ std::unordered_map<std::string, Opcode> opcodes{
         {"POP_SCOPE",     OP_POP_SCOPE},
         {"JUMP_IF_FALSE", OP_JUMP_IF_FALSE},
         {"JUMP",          OP_JUMP},
+        {"GREATER_THAN",  OP_GREATER_THAN},
+        {"LESS_THAN",     OP_LESS_THAN},
+        {"EQUALITY",      OP_EQUALITY},
 };
 
 bool operator==(const Bytecode &a, const Bytecode &b) {
@@ -97,6 +100,18 @@ void Bytecode::serialize(std::ofstream &outfile) {
             }
             case OP_MODULO: {
                 outfile << setw(iwidth) << "MODULO" << endl;
+                break;
+            }
+            case OP_EQUALITY: {
+                outfile << setw(iwidth) << "EQUALITY" << endl;
+                break;
+            }
+            case OP_GREATER_THAN: {
+                outfile << setw(iwidth) << "GREATER_THAN" << endl;
+                break;
+            }
+            case OP_LESS_THAN: {
+                outfile << setw(iwidth) << "LESS_THAN" << endl;
                 break;
             }
             case OP_PRINT: {

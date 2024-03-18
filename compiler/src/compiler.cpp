@@ -9,7 +9,10 @@ std::map<TokenType, Opcode> binary_operations {
         { SUBTRACTION, OP_SUBTRACT },
         { MULTIPLICATION, OP_MULTIPLY },
         { DIVISION, OP_DIVIDE },
-        { MODULO, OP_MODULO }
+        { MODULO, OP_MODULO },
+        { IS, OP_EQUALITY },
+        { GREATER, OP_GREATER_THAN },
+        { LESS, OP_LESS_THAN },
 };
 
 size_t Compiler::emit(Byte byte) {
@@ -33,6 +36,9 @@ void Compiler::expression() {
 
     while (is_binary_operator(peek())) {
         Opcode operation = binary_operations[next().type];
+        if (operation == OP_GREATER_THAN || operation == OP_LESS_THAN) {
+            consume(THAN);
+        }
         value();
         emit(operation);
     }

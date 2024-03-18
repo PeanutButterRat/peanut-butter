@@ -25,6 +25,9 @@ enum Opcode {
     OP_POP_SCOPE,
     OP_JUMP_IF_FALSE,
     OP_JUMP,
+    OP_EQUALITY,
+    OP_GREATER_THAN,
+    OP_LESS_THAN,
 };
 
 class Bytecode {

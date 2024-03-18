@@ -48,6 +48,24 @@ void VM::run() {
                 push(left - right);
                 break;
             }
+            case OP_EQUALITY: {
+                auto right = pop();
+                auto left = pop();
+                push(left == right);
+                break;
+            }
+            case OP_GREATER_THAN: {
+                auto right = pop();
+                auto left = pop();
+                push(left > right);
+                break;
+            }
+            case OP_LESS_THAN: {
+                auto right = pop();
+                auto left = pop();
+                push(left < right);
+                break;
+            }
             case OP_PRINT: {
                 std::cout << pop() << std::endl;
                 break;
