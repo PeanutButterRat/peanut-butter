@@ -37,3 +37,15 @@ TEST(BytecodeTests, Serialization) {
 
     ASSERT_EQ(before, after);
 }
+
+TEST(BytecodeTests, LineSplitting) {
+    std::string line = "\t\tthis is a   test, \t\"Hello, world!\"";
+    std::vector<std::string> expected = { "this", "is", "a", "test,", "\"Hello, world!\"" };
+    auto actual = split(line);
+    ASSERT_EQ(expected, actual);
+
+    line = "a b c \"this";
+    expected = { "a", "b", "c", "\"this"};
+    actual = split(line);
+    ASSERT_EQ(expected, actual);
+}

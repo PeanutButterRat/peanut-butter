@@ -134,23 +134,18 @@ void Bytecode::serialize(std::ofstream &outfile) {
 }
 
 std::vector<std::string> split(const std::string &line) {
-    size_t start = line.size();
     std::vector<std::string> words{};
 
     for (size_t index = 0; index < line.size(); index++) {
-        auto character = line[index];
-
-        if (!isspace(character) && start >= line.size()) {
-            start = index;
-        } else if (isspace(character) && start < line.size()) {
-            auto length = index - start;
-            words.emplace_back(line.substr(start, length));
-            start = line.size();
+        if (line[index] == '"') {
+            auto start = index++;
+            while (index < line.size() && line[index++] != '"');
+            words.emplace_back(line.substr(start, index - start));
+        } else if (!isspace(line[index])) {
+            auto start = index++;
+            while (index < line.size() && !isspace(line[index])) index++;
+            words.emplace_back(line.substr(start, index - start));
         }
-    }
-
-    if (start < line.size()) {
-        words.emplace_back(line.substr(start, line.size()));
     }
 
     return words;

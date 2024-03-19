@@ -30,6 +30,8 @@ enum Opcode {
     OP_LESS_THAN,
 };
 
+std::vector<std::string> split(const std::string &line);
+
 class Bytecode {
     std::vector<Value> constants;
 
