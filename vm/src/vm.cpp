@@ -51,19 +51,19 @@ void VM::run() {
             case OP_EQUALITY: {
                 auto right = pop();
                 auto left = pop();
-                push(left == right);
+                push(Value((bool) (left == right)));
                 break;
             }
             case OP_GREATER_THAN: {
                 auto right = pop();
                 auto left = pop();
-                push(left > right);
+                push(Value((bool) (left > right)));
                 break;
             }
             case OP_LESS_THAN: {
                 auto right = pop();
                 auto left = pop();
-                push(left < right);
+                push(Value((bool) (left < right)));
                 break;
             }
             case OP_PRINT: {
@@ -111,13 +111,13 @@ void VM::run() {
             case OP_AND: {
                 auto right = pop();
                 auto left = pop();
-                push((bool) (left.truthy() && right.truthy()));
+                push(Value((bool) (left.truthy() && right.truthy())));
                 break;
             }
             case OP_OR: {
                 auto right = pop();
                 auto left = pop();
-                push((bool) (left.truthy() || right.truthy()));
+                push(Value((bool) (left.truthy() || right.truthy())));
                 break;
             }
             default:
