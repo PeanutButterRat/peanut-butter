@@ -119,7 +119,7 @@ Execute the compiled program with `pbpl`.
 ```sh
 ./bin/pbpl hello_world.nut  # Notice the file extension change.
 ```
-
+For a more in-depth guide on how to use the language, check out the [wiki](https://github.com/PeanutButterRat/peanut-butter/wiki).
 <!-- CONTRIBUTING -->
 ## Contributing
 
