@@ -6,8 +6,6 @@
 #include "../include/scanner.h"
 
 const std::unordered_map<std::string, TokenType> keywords{
-        {"define",    DEFINE},
-        {"as",        AS},
         {"set",       SET},
         {"let",       LET},
         {"be",        BE},
@@ -23,10 +21,8 @@ const std::unordered_map<std::string, TokenType> keywords{
         {"plus",      ADDITION},
         {"over",      DIVISION},
         {"with",      WITH},
-        {"return",    RETURN},
         {"mod",       MODULO},
         {"while",     WHILE},
-        {"of",        OF},
         {"print",     PRINT},
         {"is",        IS},
         {"greater",   GREATER},
