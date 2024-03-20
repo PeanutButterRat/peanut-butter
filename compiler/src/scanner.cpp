@@ -109,7 +109,7 @@ void Scanner::string(char terminator) {
     auto start = index;
     next();  // Move past the opening quotation.
 
-    while (!is_line_terminator(peek()) && peek() != '"') { next(); }
+    while (!is_line_terminator(peek()) && peek() != terminator) { next(); }
     if (next() != terminator) { throw ScannerException("Unterminated string literal", line); }
     auto word = source.substr(start + 1, index - start - 2);  // Don't include the quotes.
 
