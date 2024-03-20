@@ -65,7 +65,7 @@ std::vector<Token> Scanner::tokenize() {
                 comma();
             } else if (current == '"' || current == '\'') {
                 string(current);
-            } else if (isdigit(current)) {
+            } else if (isdigit(current) || current == '-') {
                 number();
             } else if (is_identifier_char(current)) {  // Identifier or keyword.
                 word();
