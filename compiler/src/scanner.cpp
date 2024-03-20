@@ -31,7 +31,6 @@ const std::unordered_map<std::string, TokenType> keywords{
 };
 
 std::vector<Token> Scanner::tokenize() {
-    lowercase(source);
     std::stack<size_t> stack{};
 
     while (has_next()) {
@@ -95,7 +94,9 @@ void Scanner::word() {
 
     while (is_identifier_char(peek())) { next(); }
     auto word = source.substr(start, index - start);
-    auto type = keywords.find(word) != keywords.end() ? keywords.at(word) : IDENTIFIER;
+    auto lowercase = word;
+    std::transform(lowercase.begin(), lowercase.end(), lowercase.begin(), tolower);
+    auto type = keywords.find(lowercase) != keywords.end() ? keywords.at(lowercase) : IDENTIFIER;
 
     tokens.emplace_back(type, word, line);
 }
@@ -184,14 +185,4 @@ void Scanner::comma() {
 std::ostream &operator<<(std::ostream &os, const Token &token) {
     return os << "Token: { Type: " << token.get_type_string() << ", Lexeme: '" << token.lexeme << "', Line: "
               << token.line << " }";
-}
-
-void lowercase(std::string& string) {
-    for (auto it = string.begin(); it < string.end(); it++) {
-        if (*it != '"') {
-            *it = tolower(*it);
-        } else {
-            while (++it < string.end() && *it != '"');
-        }
-    }
 }

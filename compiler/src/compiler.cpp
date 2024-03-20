@@ -231,10 +231,6 @@ size_t Compiler::here() {
     return code.size();
 }
 
-void Compiler::function() {
-
-}
-
 void Compiler::print() {
     consume(PRINT);
     expression();
