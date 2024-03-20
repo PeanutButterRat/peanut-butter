@@ -108,6 +108,18 @@ void VM::run() {
                 pc += offset;
                 break;
             }
+            case OP_AND: {
+                auto right = pop();
+                auto left = pop();
+                push((bool) (left.truthy() && right.truthy()));
+                break;
+            }
+            case OP_OR: {
+                auto right = pop();
+                auto left = pop();
+                push((bool) (left.truthy() || right.truthy()));
+                break;
+            }
             default:
                 std::cout << "Unknown opcode: " << opcode << std::endl;
         }
@@ -119,6 +131,9 @@ Byte VM::next() {
 }
 
 Value VM::pop() {
+    if (stack.empty()) {
+        throw RuntimeException("Attempted to pop from empty stack.");
+    }
     auto top = stack.top();
     stack.pop();
     return top;

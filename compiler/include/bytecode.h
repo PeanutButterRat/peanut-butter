@@ -28,6 +28,8 @@ enum Opcode {
     OP_EQUALITY,
     OP_GREATER_THAN,
     OP_LESS_THAN,
+    OP_OR,
+    OP_AND,
 };
 
 std::vector<std::string> split(const std::string &line);

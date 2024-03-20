@@ -24,6 +24,8 @@ std::unordered_map<std::string, Opcode> opcodes{
         {"GREATER_THAN",  OP_GREATER_THAN},
         {"LESS_THAN",     OP_LESS_THAN},
         {"EQUALITY",      OP_EQUALITY},
+        {"AND",           OP_AND},
+        {"OR",            OP_OR},
 };
 
 bool operator==(const Bytecode &a, const Bytecode &b) {
@@ -76,7 +78,7 @@ void Bytecode::serialize(std::ofstream &outfile) {
         outfile << left << '\t';
 
         std::string key;
-        for (auto &i : opcodes) {
+        for (auto &i: opcodes) {
             if (i.second == opcode) {
                 key = i.first;
                 break;
@@ -92,6 +94,8 @@ void Bytecode::serialize(std::ofstream &outfile) {
             case OP_MULTIPLY:
             case OP_DIVIDE:
             case OP_MODULO:
+            case OP_OR:
+            case OP_AND:
             case OP_EQUALITY:
             case OP_GREATER_THAN:
             case OP_LESS_THAN:
@@ -196,9 +200,9 @@ Bytecode Bytecode::deserialize(std::ifstream &infile) {
             string = string.substr(1, string.length() - 2);
             code.add_constant(Value(string));
         } else if (string == "true") {
-            code.add_constant(true);
+            code.add_constant(Value(true));
         } else if (string == "false") {
-            code.add_constant(false);
+            code.add_constant(Value(false));
         } else {
             code.add_constant(std::stoi(string));
         }

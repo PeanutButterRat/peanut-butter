@@ -4,15 +4,17 @@
 
 const Byte placeholder = 0xff;
 
-std::map<TokenType, Opcode> binary_operations {
-        { ADDITION, OP_ADD },
-        { SUBTRACTION, OP_SUBTRACT },
-        { MULTIPLICATION, OP_MULTIPLY },
-        { DIVISION, OP_DIVIDE },
-        { MODULO, OP_MODULO },
-        { IS, OP_EQUALITY },
-        { GREATER, OP_GREATER_THAN },
-        { LESS, OP_LESS_THAN },
+std::map<TokenType, Opcode> binary_operations{
+        {ADDITION,       OP_ADD},
+        {SUBTRACTION,    OP_SUBTRACT},
+        {MULTIPLICATION, OP_MULTIPLY},
+        {DIVISION,       OP_DIVIDE},
+        {MODULO,         OP_MODULO},
+        {IS,             OP_EQUALITY},
+        {GREATER,        OP_GREATER_THAN},
+        {LESS,           OP_LESS_THAN},
+        {AND,            OP_AND},
+        {OR,             OP_OR},
 };
 
 size_t Compiler::emit(Byte byte) {
@@ -230,7 +232,7 @@ size_t Compiler::here() {
 }
 
 void Compiler::function() {
-    
+
 }
 
 void Compiler::print() {
