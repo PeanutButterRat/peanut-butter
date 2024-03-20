@@ -31,7 +31,7 @@ const std::unordered_map<std::string, TokenType> keywords{
 };
 
 std::vector<Token> Scanner::tokenize() {
-    std::transform(source.begin(), source.end(), source.begin(), tolower);
+    lowercase(source);
     std::stack<size_t> stack{};
 
     while (has_next()) {
@@ -184,4 +184,14 @@ void Scanner::comma() {
 std::ostream &operator<<(std::ostream &os, const Token &token) {
     return os << "Token: { Type: " << token.get_type_string() << ", Lexeme: '" << token.lexeme << "', Line: "
               << token.line << " }";
+}
+
+void lowercase(std::string& string) {
+    for (auto it = string.begin(); it < string.end(); it++) {
+        if (*it != '"') {
+            *it = tolower(*it);
+        } else {
+            while (++it < string.end() && *it != '"');
+        }
+    }
 }

@@ -6,6 +6,7 @@
 
 #include "token.h"
 
+void lowercase(std::string& string);
 
 class Scanner {
     std::string source;

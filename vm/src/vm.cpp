@@ -121,7 +121,7 @@ void VM::run() {
                 break;
             }
             default:
-                std::cout << "Unknown opcode: " << opcode << std::endl;
+                std::cout << "Unknown opcode: " << (int) opcode << std::endl;
         }
     }
 }
