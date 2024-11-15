@@ -158,7 +158,7 @@ Project Link: [https://github.com/PeanutButterRat/peanut-butter](https://github.
 <!-- ACKNOWLEDGMENTS -->
 ## Acknowledgments
 
-The only major resource used in this project was the knowledge found in _Crafting Interpreters by Robert Nystrom_. The book is very well written, and got me hooked on language design.
+The only major resource used in this project was the knowledge found in _Crafting Interpreters_ by Robert Nystrom. The book is very well written and got me hooked on language design.
 Peanut Butter is largely its own creation and doesn't follow the source code given in the book but rather it relies on the theory presented by the author for implementing a language. 
 
 You can find more it on the author's website at [https://craftinginterpreters.com/](https://craftinginterpreters.com/).
